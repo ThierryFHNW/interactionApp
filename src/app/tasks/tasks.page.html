@@ -1,9 +1,101 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>tasks</ion-title>
+    <ion-title>Tasks</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content
+        [scrollEvents]="true"
+        (ionScrollStart)="logScrollStart()"
+        (ionScroll)="logScrolling($event)"
+        (ionScrollEnd)="logScrollEnd()">
+
+  <!-- List of items -->
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+    <ion-list>
+      <ion-item button *ngFor="let item of items" (click)="itemSelected(item)">
+        {{ item }}
+      </ion-item>
+    </ion-list>
+
+  <!-- Default Searchbar -->
+  <ion-searchbar></ion-searchbar>
+
+  <!-- Searchbar with danger color -->
+  <ion-searchbar color="danger"></ion-searchbar>
+
+  <!-- Searchbar with value -->
+  <ion-searchbar value="Ionic"></ion-searchbar>
+
+  <!-- Searchbar with telephone type -->
+  <ion-searchbar type="tel"></ion-searchbar>
+
+  <!-- Searchbar with a cancel button and custom cancel button text -->
+  <ion-searchbar showCancelButton cancelButtonText="Custom Cancel"></ion-searchbar>
+
+  <!-- Searchbar with a custom debounce -->
+  <ion-searchbar debounce="500"></ion-searchbar>
+
+  <!-- Animated Searchbar -->
+  <ion-searchbar animated></ion-searchbar>
+
+  <!-- Searchbar with a placeholder -->
+  <ion-searchbar placeholder="Filter Schedules"></ion-searchbar>
+
+  <!-- Searchbar in a Toolbar -->
+  <ion-toolbar>
+    <ion-searchbar></ion-searchbar>
+  </ion-toolbar>
+
+  <!-- List of Tasks with Delete button -->
+  <ion-item (click)="testClick()">
+    <ion-label text-center>
+      <h3>Task Title</h3>
+      <p>Task State</p>
+    </ion-label>
+    <ion-icon name="close-circle" slot="end"></ion-icon>
+  </ion-item>
+
+  <!-- Button to change input type -->
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-list side="start">
+      <ion-fab-button>
+        <ion-icon name="mic"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="mic"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button>
+        <ion-icon name="mic"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <!-- Task bearbeiten -->
+  <ion-item>
+    <ion-label position="floating">Titel</ion-label>
+    <ion-input></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Beschreibung</ion-label>
+    <ion-input></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Zeitaufwand</ion-label>
+    <ion-input></ion-input>
+  </ion-item>
+
+  <!-- Button to create a new Task -->
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>
