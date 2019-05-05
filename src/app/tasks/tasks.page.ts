@@ -18,6 +18,7 @@ export class TasksPage implements OnInit {
 
   }
 
+
   initializeItems() {
     this.items = [
       'Amsterdam',
