@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 
 @Component({
   selector: 'app-scanner',
@@ -7,20 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ScannerPage implements OnInit {
 
-  constructor() { }
+  constructor(private qrScanner: QRScanner) {}
 
   ngOnInit() {
-    /*//FOR NATIVE API CALLS CHECK STATUS OF NATIVE ENVIRONMENT
-    this.platform.ready().then(() => {
-      if (this.platform.is('cordova')) {
-        // make your native API calls
-      } else {
-        // fallback to browser APIs
-      }
-    });*/
-
-
 
   }
-
 }
+
+
+/*//FOR NATIVE API CALLS CHECK STATUS OF NATIVE ENVIRONMENT
+this.platform.ready().then(() => {
+if (this.platform.is('cordova')) {
+  // make your native API calls
+} else {
+  // fallback to browser APIs
+}
+});*/
+
+
+

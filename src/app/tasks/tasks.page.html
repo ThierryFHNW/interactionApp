@@ -16,7 +16,7 @@
   <!-- List of items -->
   <ion-searchbar text-center placeholder="Task suchen" (ionInput)="getItems($event)"></ion-searchbar>
     <ion-list>
-      <ion-item button *ngFor="let item of items" (click)="itemSelected(item)" [routerLink]="['/tasks', value]" routerDirection="forward">
+      <ion-item button *ngFor="let item of items" [routerLink]="['/tasks', value]" routerDirection="forward">
         <ion-label text-center>
           <h3 [(ngModel)]="value">{{ item }}</h3>
           <p>Task State</p>
@@ -25,44 +25,11 @@
       </ion-item>
     </ion-list>
 
-  <!-- Button to change input type -->
-  <ion-fab vertical="top" horizontal="end" slot="fixed">
-    <ion-fab-button mini>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
 
-    <ion-fab-list side="start">
-      <ion-fab-button>
-        <ion-icon name="mic"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="mic"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button>
-        <ion-icon name="mic"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
-
-  <!-- Task bearbeiten -->
-  <ion-item>
-    <ion-label position="floating">Titel</ion-label>
-    <ion-input></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating">Beschreibung</ion-label>
-    <ion-input></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating">Zeitaufwand</ion-label>
-    <ion-input></ion-input>
-  </ion-item>
 
   <!-- Button to create a new Task -->
   <ion-fab vertical="bottom" horizontal="center">
-    <ion-fab-button>
+    <ion-fab-button [routerLink]="['/tasks', value]" routerDirection="forward">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

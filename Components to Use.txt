@@ -1,0 +1,8 @@
+Popover / Actionsheet / Radioalert:
+for the Input Methods
+
+Slides:
+Introduction to App
+
+Toast:
+Quick Popup Information
