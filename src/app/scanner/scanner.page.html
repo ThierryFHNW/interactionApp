@@ -8,5 +8,23 @@
 </ion-header>
 
 <ion-content>
-  <ion-button icon-left (click)="scan()"><ion-icon name="barcode"></ion-icon>Scan</ion-button>
+  <ion-item>
+    <!-- on webclient: Input the server data here in semicolons, no input field but a text-->
+    <ion-input type="text" placeholder="My QR data" [(ngModel)]="qrData"></ion-input>
+  </ion-item>
+  <ion-button full (click)="createCode()">createCode()</ion-button>
+  <ion-button full (click)="scanCode()">scanCode()</ion-button>
+
+  <ion-card *ngIf="createdCode">
+    <ngx-qrcode [qrc-value]="createdCode"></ngx-qrcode>
+    <ion-card-content>
+      <!--for debugging data-->
+      <p>Value: {{ createdCode }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="scannedCode">
+    <!--put into form and connect-->
+    Result from Scan: {{ scannedCodeArray[0] }}
+  </ion-card>
 </ion-content>
