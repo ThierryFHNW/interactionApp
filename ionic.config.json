@@ -1,5 +1,7 @@
 {
   "name": "interactionAppNew",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

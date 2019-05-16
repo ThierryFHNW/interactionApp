@@ -1,9 +1,42 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>tasks</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tasks</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content
+        [scrollEvents]="true"
+        (ionScrollStart)="logScrollStart()"
+        (ionScroll)="logScrolling($event)"
+        (ionScrollEnd)="logScrollEnd()">
+
+  <!-- Searchbar maybe ionInput is broke -->
+  <ion-searchbar text-center placeholder="Task suchen" (ionInput)="searchTasks($event)"></ion-searchbar>
+
+  <!-- Check if storage variables are accesible -->
+  <p>Paragraph: {{pyWallServerURL}}</p>
+
+  <!-- GET: List of Tasks -->
+  <ion-list>
+    <ion-item *ngFor="let task of tasks" [routerLink]="['/tasks', value]" routerDirection="forward">
+      <ion-label text-center>
+        <h3>{{task.name}}</h3>
+      </ion-label>
+      <ion-icon name="close-circle" slot="end" (click)="remove()"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <!-- Button to create a new Task -->
+  <ion-fab vertical="bottom" horizontal="center">
+    <ion-fab-button [routerLink]="['/tasks', value]" routerDirection="forward">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!--Modal for the tasks page to open a task-->
+  <!--https://ionicframework.com/docs/v3/components/#modals-->
 
 </ion-content>

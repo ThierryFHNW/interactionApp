@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>playground</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-item>
+        <ion-label>Select Project</ion-label>
+        <ion-select>
+            <ion-select-option selected>I am interested in</ion-select-option>
+            <ion-select-option *ngFor="let topic of topics">{{ topic }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>Select Project</ion-label>
+        <ion-select>
+            <ion-select-option selected>I am interested in</ion-select-option>
+            <ion-select-option *ngFor="let topic of topics">{{ topic }}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <form #playGroundForm="ngForm" *ngIf="!submitted" (ngSubmit)="onSubmit" novalidate>
+        <div>
+            <ion-item>
+                <ion-label position="floating" required>Project</ion-label>
+                <ion-input type="text" name="project" required #project="ngModel" [class.is-invalid]="project.invalid && project.touched" class="form-control" [(ngModel)]="playGroundModel.project"></ion-input>
+                <small class="text-danger" [class.d-none]="project.valid || project.untouched">Project is required</small>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating" required>PyWall</ion-label>
+                <ion-input type="text" name="pywall" #pywall="ngModel" [(ngModel)]="model.pywall" required></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating">SyncServer</ion-label>
+                <ion-input type="text" name="syncserver" #syncserver="ngModel" [(ngModel)]="model.syncserver" required></ion-input>
+            </ion-item>
+            <ion-button button [disabled]="model.form.invalid" primary type="submit" block>Submit Form</ion-button>
+        </div>
+        <ion-item>{{project.className}}</ion-item>
+    </form>
+    <ion-item>{{project.className}}</ion-item>
+</ion-content>

@@ -1,0 +1,122 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <input type="text" formControlName="firstName" required>
+  <p>    Form Status: {{ profileForm.status }}  </p>
+</ion-content>
+
+<!--<ion-content>
+  <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()log" padding-right >
+    <ion-item>
+      <ion-label position="floating">Projekt</ion-label>
+      <ion-input type="text" formControlName="project" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">PyWall</ion-label>
+      <ion-input type="text" formControlName="pywall" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">SyncServer</ion-label>
+      <ion-input type="text" formControlName="syncserver" required></ion-input>
+    </ion-item>
+    <ion-button
+            color="primary"
+            expand="block"
+            [disabled]="!myControl.valid"
+            (click)="settingsForm()">settingsForm</ion-button>
+  </form>
+</ion-content>-->
+
+<!--
+<ion-content>
+  <div class="container-fluid">
+    <h2>Settings Form</h2>
+    <form [formGroup]="settingsForm">
+      {{settingsForm.value | json}}
+
+      <div>
+        <ion-label>Project</ion-label>
+        <ion-input formControlName="text" type="text" required></ion-input>
+        &lt;!&ndash;<small *ngIf="project.valid || project.untouched" class="text-danger">Project is required</small>&ndash;&gt;
+      </div>
+
+      <div>
+        <ion-label>PyWall</ion-label>
+        <ion-input formControlName="text" type="text" required></ion-input>
+        &lt;!&ndash;<small *ngIf="pyWall.valid || pyWall.untouched" class="text-danger">PyWall is required</small>&ndash;&gt;
+      </div>
+
+      <div>
+        <ion-label>SyncServer</ion-label>
+        <ion-input formControlName="text" type="text" required></ion-input>
+        &lt;!&ndash;<small *ngIf="syncServer.valid || syncServer.untouched" class="text-danger">SyncServer is required</small>&ndash;&gt;
+      </div>
+
+      <ion-button type="submit" primary>Submit</ion-button>
+    </form>
+  </div>
+</ion-content>
+-->
+
+<!--<ion-content>
+  <div class="widget-container">
+    <div class="widget">
+      <div class="widget-content">
+        <div class="widget-header">
+          <a href="#/"><ion-icon name="close"(click)="close()"></ion-icon></a>
+        </div>
+        <h2>Settings</h2>
+        <div class="message" [ngClass]="{warn: message.isWarn}" *ngIf="message">
+          <ion-icon name="warning"></ion-icon>
+          <ion-icon name="circle"></ion-icon>
+          Message.Text {{message.text}}
+        </div>
+
+        <div *ngIf="!editing">
+          <div class="form-row">
+            <ion-label>Default</ion-label>
+            <ion-select name="default" (click)="checkServers()" [(ngModel)]="default" ng-options="server.project for (k, server) in servers track by $s" class="small">
+            </ion-select>
+            <ion-button button class="green" (click)="changeDefault()"><ion-icon name="save"></ion-icon></ion-button>
+          </div>
+          <h3>Server Konfigurationen</h3>
+          <div *ngFor="let server of servers">
+            <div class="form-row">
+              <ion-label class="large">
+                Server.Projects {{server.project}}
+              </ion-label>
+              <ion-button button class="orange" (click)="edit(server)"><ion-item name="edit"></ion-item></ion-button>
+            </div>
+          </div>
+          <ion-button button class="green" (click)="add()"><ion-item name="add"></ion-item></ion-button>
+        </div>
+
+        <div *ngIf="editing">
+          <div class="form-row">
+            <ion-label>Project</ion-label>
+            <ion-input type="text" placeholder="Project" [(ngModel)]="editing.project"></ion-input>
+          </div>
+          <div class="form-row">
+            <ion-label>User</ion-label>
+            <ion-input type="text" placeholder="User" [(ngModel)]="editing.user"></ion-input>
+          </div>
+          <div class="form-row">
+            <ion-label>Server</ion-label>
+            <ion-input type="text" placeholder="Server" [(ngModel)]="editing.server"></ion-input>
+          </div>
+          <div class="form-row">
+            <ion-label>SyncServer</ion-label>
+            <ion-input type="text" placeholder="SyncServer" [(ngModel)]="editing.syncServer"></ion-input>
+          </div>
+          <ion-button button class="green" (click)="save()"><ion-icon name="save"></ion-icon></ion-button>
+          <ion-button button class="orange" (click)="cancel()"><ion-icon name="close"></ion-icon></ion-button>
+          <ion-button button class="red" *ngIf="!new" (click)="remove()"><ion-icon name="delete"></ion-icon></ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>-->

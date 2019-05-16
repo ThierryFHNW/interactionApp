@@ -1,9 +1,36 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>home</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title text-center>aWall Interaction App</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-4>
+        <ion-card text-center padding color="primary" routerLink="/scanner" routerDirection="forward">
+          <ion-icon size="large" name="camera"></ion-icon>
+          <h3>Projekt</h3>
+        </ion-card>
+      </ion-col>
+      <ion-col col-4>
+        <ion-card text-center padding color="primary" routerLink="/tasks" routerDirection="forward">
+          <ion-icon size="large" name="clipboard"></ion-icon>
+          <h3>Tasks</h3>
+        </ion-card>
+      </ion-col>
+      <ion-col col-4>
+        <ion-card text-center padding color="primary" routerLink="/settings" routerDirection="forward">
+          <ion-icon size="large" name="settings"></ion-icon>
+          <h3>Settings</h3>
+        </ion-card>
+      </ion-col>
+      <ion-col col-4>
+        <ion-card text-center padding color="primary" routerLink="/playground" routerDirection="forward">
+          <ion-icon size="large" name="play"></ion-icon>
+          <h3>Playground</h3>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
