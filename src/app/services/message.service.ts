@@ -4,9 +4,7 @@ import {Observable, BehaviorSubject} from 'rxjs';
 import {MessageLevel} from '../models/messagelevel';
 import {environment} from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+
 /**
  * this object represents a Message that gets send by this service
  */
@@ -20,12 +18,15 @@ export class AlertMessage {
   }
 }
 
+
+@Injectable({
+  providedIn: 'root'
+})
 /**
  * this class is used for logging and user notifcation
  * to consume messages use getObservable() and subscribe to the observable
  * to send messages to consumers use sendMessage() and its helper functions
  */
-@Injectable()
 export class MessageService {
 
   private subject = new BehaviorSubject<AlertMessage>(null);

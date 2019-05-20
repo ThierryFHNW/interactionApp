@@ -18,20 +18,26 @@ export interface PlannedTask {
 @Injectable({
   providedIn: 'root'
 })
+
+// BACKEND LOOKS LIKE THIS
+// @app.route('/projects/plannedtasks/<project_key>/<sprint_id>', methods=['GET'])
+// def get_plannedTasks(project_key, sprint_id):
+
 export class TaskService {
   private projectBaseURL: string;
 
   constructor(private http: HttpClient,
-              // private configLoaderService: ConfigLoaderService,
               private settingsService: SettingsService,
               private messageService: MessageService) {
-    this.projectBaseURL = `${this.settingsService.pyWall}projects`;
+    this.projectBaseURL = `${this.settingsService.pyWallServer}projects`;
   }
 
   list(projectName: string, sprintId: string): Observable<any> {
 
     if (!this.settingsService.isMock()) {
+      console.log('this.projectBaseURL: ' + this.projectBaseURL);
       const targetURL = this.projectBaseURL + `/plannedtasks/${projectName}/${sprintId}`;
+      console.log('targetURL: ' + targetURL);
       this.messageService.sendDebug(`PlannedTaskService get called on project ${projectName} and sprint ${sprintId}`);
       return this.http.get<Task[]>(targetURL).pipe(map(tasks => this.mapJsonToTask(tasks)));
     }

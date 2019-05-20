@@ -29,6 +29,8 @@
     </ion-item>
   </ion-list>
 
+  <ion-button (click)="httpRequest()"></ion-button>
+
   <!-- Button to create a new Task -->
   <ion-fab vertical="bottom" horizontal="center">
     <ion-fab-button [routerLink]="['/tasks', value]" routerDirection="forward">

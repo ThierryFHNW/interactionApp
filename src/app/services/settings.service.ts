@@ -8,10 +8,10 @@ import { Storage } from '@ionic/storage';
 export class SettingsService {
   // when it exists in localStorage it becomes that value otherwise its null which is its default value anyway
   // TODO rename to projectKey
-  pyWall = 'init';
-  syncServer = 'init';
-  projectName = 'init';
-  sprintId = 'init';
+  pyWallServer = 'http://localhost:8000';
+  syncServer = 'http://localhost:9091';
+  projectName = 'AWDEMO';
+  sprintId = '213';
   updateSubject = new Subject<void>();
   /**
    * if this is set to true the rest services should return local test data and not send update requests to the server
@@ -19,11 +19,12 @@ export class SettingsService {
    */
   private mock = false;
 
+  constructor(private storage: Storage) {  }
 
   setStorageVariables() {
     // setStorageVariables(projectName: string, pyWallServerURL: string, pySyncServerURL: string, sprintId: string) {
     this.storage.set('projectName', this.projectName);
-    this.storage.set('pyWallServer', this.pyWall);
+    this.storage.set('pyWallServer', this.pyWallServer);
     this.storage.set('pySyncServer', this.syncServer);
     this.storage.set('sprintId', this.sprintId);
   }
@@ -45,7 +46,7 @@ export class SettingsService {
       this.projectName = value;
     });
     this.storage.get('pyWallServerURL').then(value => {
-      this.pyWall = value;
+      this.pyWallServer = value;
     });
     this.storage.get('pySyncServerURL').then(value => {
       this.syncServer = value;
@@ -53,9 +54,6 @@ export class SettingsService {
     this.storage.get('sprintId').then(value => {
       this.sprintId = value;
     });
-  }
-
-  constructor(private storage: Storage) {
   }
 
   getProjectName(): string {
@@ -101,5 +99,13 @@ export class SettingsService {
     this.sprintId = sprintId;
     localStorage.setItem('sprintId', this.sprintId);
   }
+
+  /*
+  mockStorageVariables() {
+      this.storage.set('pyWallServerURL', 'http://localhost:8000');
+      this.storage.set('pySyncServerURL', 'http://localhost:9091');
+      this.storage.set('projectName', 'AWDEMO');
+      this.storage.set('sprintId', '213');
+  }*/
 
 }
