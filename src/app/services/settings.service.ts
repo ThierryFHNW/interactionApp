@@ -1,65 +1,105 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs/index';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
-  settings: any;
-  constructor() { }
+  // when it exists in localStorage it becomes that value otherwise its null which is its default value anyway
+  // TODO rename to projectKey
+  pyWall = 'init';
+  syncServer = 'init';
+  projectName = 'init';
+  sprintId = 'init';
+  updateSubject = new Subject<void>();
+  /**
+   * if this is set to true the rest services should return local test data and not send update requests to the server
+   * this setting can be used when jira is down
+   */
+  private mock = false;
 
-  saveSettings = () => {
-    window.localStorage.setItem('settings', JSON.stringify(this.settings));
+
+  setStorageVariables() {
+    // setStorageVariables(projectName: string, pyWallServerURL: string, pySyncServerURL: string, sprintId: string) {
+    this.storage.set('projectName', this.projectName);
+    this.storage.set('pyWallServer', this.pyWall);
+    this.storage.set('pySyncServer', this.syncServer);
+    this.storage.set('sprintId', this.sprintId);
   }
 
-  loadSettings = () => {
-    this.settings = JSON.parse(window.localStorage.getItem('settings'));
-    if (this.settings === null) {
-      this.settings = {
-        configurations: {},
-        default: 0
-      };
-    }
+  getStorageVariables2() {
+    return this.storage.keys().then(keys => {
+      Promise.all(keys.map(key => console.log(this.storage.get(key))));
+    });
+
+    /*return this.storage.keys()
+        .then(keys => Promise.all(keys.map(k => this.storage.get(k))));*/
   }
 
-  getSettings = () => {
-    this.loadSettings();
-    return this.settings;
+  getStorageVariables() {
+    this.storage.forEach( (storageValues ) => {
+      console.log(storageValues);
+    });
+    this.storage.get('projectName').then(value => {
+      this.projectName = value;
+    });
+    this.storage.get('pyWallServerURL').then(value => {
+      this.pyWall = value;
+    });
+    this.storage.get('pySyncServerURL').then(value => {
+      this.syncServer = value;
+    });
+    this.storage.get('sprintId').then(value => {
+      this.sprintId = value;
+    });
   }
 
-  getDefaultConfiguration = () => {
-    if (this.settings) {
-      return this.settings.default;
-    }
+  constructor(private storage: Storage) {
   }
 
-  setDefaultConfiguration = (id) => {
-    this.settings.default = id;
-    this.saveSettings();
+  getProjectName(): string {
+    return this.projectName;
   }
 
-  add = (configuration) => {
-    console.log(this.settings);
-    console.log(this.settings.configurations);
-    configuration.id = new Date().getTime();
-    configuration.url = configuration.server + '/projects/' + configuration.project + '/widgets/gallery/images/';
-    this.settings.configurations[configuration.id] = configuration;
-    this.saveSettings();
+  getSprintId(): string {
+    return this.sprintId;
   }
 
-  edit = (configuration) => {
-    const conf = this.settings.configurations[configuration.id];
-    conf.server = configuration.server;
-    conf.project = configuration.project;
-    conf.url = conf.server + '/projects/' + conf.project + '/widgets/gallery/images/';
-    conf.syncServer = configuration.syncServer;
-    conf.user = configuration.user;
-    this.saveSettings();
+  isMock(): boolean {
+    return this.mock;
   }
 
-  remove = (configuration) => {
-    delete this.settings.configurations[configuration.id];
-    this.saveSettings();
+  /**
+   * components can subscribe to this observable to be notified when settings change and they need to reload data
+   * @returns {Observable<void>}
+   */
+  getUpdateObservable(): Observable<void> {
+    return this.updateSubject.asObservable();
   }
 
-  // loadSettings();
+  /**
+   * this function will inform all listeners to the update observable
+   * and saves the settings to local storage
+   */
+  emitSettingsUpdate(): void {
+    this.updateSubject.next();
+  }
+
+  /**
+   * Sets a new projectName and persists the new setting to localstorage
+   */
+  setProjectName(projectName: string): void {
+    this.projectName = projectName;
+    localStorage.setItem('projectName', this.projectName);
+  }
+
+  /**
+   * Sets a new sprintId and persists the new setting to localstorage
+   */
+  setSprintId(sprintId: string): void {
+    this.sprintId = sprintId;
+    localStorage.setItem('sprintId', this.sprintId);
+  }
+
 }

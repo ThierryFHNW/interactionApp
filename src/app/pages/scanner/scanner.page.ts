@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
-import { StorageService } from '../../services/storage.service';
+import {SettingsService} from '../../services/settings.service';
 
 @Component({
   selector: 'app-scanner',
@@ -12,7 +12,7 @@ export class ScannerPage implements OnInit {
   scannedCode: string;
   scannedCodeArray: Array<string>;
 
-  constructor(private barcodeScanner: BarcodeScanner, private storageService: StorageService) {
+  constructor(private barcodeScanner: BarcodeScanner, private settingsService: SettingsService) {
   }
 
   ngOnInit() {
@@ -21,30 +21,13 @@ export class ScannerPage implements OnInit {
       this.scannedCodeArray = this.scannedCode.split(';');
 
       if (this.scannedCodeArray) {
-        this.storageService.project = this.scannedCodeArray[0];
-        this.storageService.pyWall = this.scannedCodeArray[1];
-        this.storageService.syncServer = this.scannedCodeArray[2];
-        this.storageService.sprintId = this.scannedCodeArray[3];
-        this.storageService.setStorageVariables();
-        this.storageService.getStorageVariables();
+        this.settingsService.projectName = this.scannedCodeArray[0];
+        this.settingsService.pyWall = this.scannedCodeArray[1];
+        this.settingsService.syncServer = this.scannedCodeArray[2];
+        this.settingsService.sprintId = this.scannedCodeArray[3];
+        this.settingsService.setStorageVariables();
+        this.settingsService.getStorageVariables();
       }
     });
   }
-
-
-
-  getStorageVariables() {
-  }
 }
-
-/*//FOR NATIVE API CALLS CHECK STATUS OF NATIVE ENVIRONMENT
-this.platform.ready().then(() => {
-if (this.platform.is('cordova')) {
-  // make your native API calls
-} else {
-  // fallback to browser APIs
-}
-});*/
-
-
-

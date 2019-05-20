@@ -8,7 +8,6 @@ const routes: Routes = [
   { path: 'tasks', loadChildren: './pages/tasks/tasks.module#TasksPageModule' },
   { path: 'task', loadChildren: './pages/task/task.module#TaskPageModule' },
   { path: 'settings', loadChildren: './pages/settings/settings.module#SettingsPageModule' },
-  { path: 'playground', loadChildren: './pages/playground/playground.module#PlaygroundPageModule' },
 ];
 
 @NgModule({
