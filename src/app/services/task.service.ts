@@ -29,7 +29,7 @@ export class TaskService {
   constructor(private http: HttpClient,
               private settingsService: SettingsService,
               private messageService: MessageService) {
-    this.projectBaseURL = `${this.settingsService.pyWallServer}projects`;
+    this.projectBaseURL = `${this.settingsService.pyWallServer}/projects`;
   }
 
   list(projectName: string, sprintId: string): Observable<any> {

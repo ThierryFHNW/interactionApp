@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {TaskService} from '../../services/task.service';
+import {SettingsService} from '../../services/settings.service';
+import {Task} from '../../models/task';
+import { Subscription, Observable } from 'rxjs/index';
 
 
 /*
@@ -12,24 +15,48 @@ import { FormBuilder } from "@angular/forms";
     styleUrls: ['./tasks.page.scss'],
 })
 export class TasksPage implements OnInit {
-    scannedCode: string;
-    scannedCodeArray: Array<string>;
+    private plannedTasks: Task[] = [];
+    private updateEvent: Subscription;
+    private subscriptions: Subscription[] = [];
+    private syncEvent: Subscription;
+    private intervalSubscription: Subscription;
+
     pyWallServerURL: string;
     pySyncServerURL: string;
     projectName: string;
     sprintId: string;
-    searchQuery = '';
-    taskName = [];
-    tasks = [];
+    tasks: Observable<any>;
 
-    constructor(private taskService: TaskService) {
-        /*this.initializeTasks();*/
+    constructor(private taskService: TaskService, private settingsService: SettingsService) {
+        /* this.initializeTasks();*/
     }
 
-    httpRequest() {
-
+    ngOnInit() {
+        /*this.mockStorageVariables();
+        this.getStorageVariables();
+        this.initializeTasks();*/
+        this.tasks = this.httpGetTasks();
+        console.log(this.tasks);
     }
 
+    httpGetTasks(): Observable<any> {
+        return this.taskService.list(this.settingsService.projectName, this.settingsService.sprintId);
+    }
+
+    updateData() {
+        const obj = this;
+        if (this.settingsService.getProjectName() && this.settingsService.getSprintId()) {
+           this.taskService.list(this.settingsService.getProjectName(), this.settingsService.getSprintId())
+                .subscribe(plannedTasks => {
+                    this.plannedTasks = plannedTasks;
+                    // this.intervalSubscription = this.getIntervalSubscription();
+                });
+        }
+    }
+
+    consoleLog() {
+        console.log(this.plannedTasks);
+    }
 
     /*initializeTasks() {
         this.taskService.getTasks()
@@ -38,11 +65,6 @@ export class TasksPage implements OnInit {
         console.log(this.tasks.values());
     }*/
 
-    ngOnInit() {
-        /*this.mockStorageVariables();
-        this.getStorageVariables();
-        this.initializeTasks();*/
-    }
 
     /*
     mockStorageVariables() {
