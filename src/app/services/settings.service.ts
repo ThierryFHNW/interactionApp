@@ -1,111 +1,124 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs/index';
-import { Storage } from '@ionic/storage';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs/index';
+import {Storage} from '@ionic/storage';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class SettingsService {
-  // when it exists in localStorage it becomes that value otherwise its null which is its default value anyway
-  // TODO rename to projectKey
-  pyWallServer = 'http://localhost:8000';
-  syncServer = 'http://localhost:9091';
-  projectName = 'AWDEMO';
-  sprintId = '213';
-  updateSubject = new Subject<void>();
-  /**
-   * if this is set to true the rest services should return local test data and not send update requests to the server
-   * this setting can be used when jira is down
-   */
-  private mock = false;
+    // when it exists in localStorage it becomes that value otherwise its null which is its default value anyway
+    // TODO rename to projectKey
+    pyWallServer: string;
+    syncServer: string;
+    projectName: string;
+    sprintId: string;
+    updateSubject = new Subject<void>();
 
-  constructor(private storage: Storage) {  }
+    /**
+     * if this is set to true the rest services should return local test data and not send update requests to the server
+     * this setting can be used when jira is down
+     */
+    private mock = false;
 
-  setStorageVariables() {
-    // setStorageVariables(projectName: string, pyWallServerURL: string, pySyncServerURL: string, sprintId: string) {
-    this.storage.set('projectName', this.projectName);
-    this.storage.set('pyWallServer', this.pyWallServer);
-    this.storage.set('pySyncServer', this.syncServer);
-    this.storage.set('sprintId', this.sprintId);
-  }
+    constructor(private storage: Storage) {
+        this.mockStorageVariables();
+        this.getStorageVariables();
+    }
 
-  getStorageVariables2() {
-    return this.storage.keys().then(keys => {
-      Promise.all(keys.map(key => console.log(this.storage.get(key))));
-    });
+    mockStorageVariables() {
+        this.storage.set('projectName', 'AWTEST');
+        this.storage.set('pyWallServer', 'http://localhost:8000');
+        this.storage.set('syncServer', 'http://localhost:9091');
+        this.storage.set('sprintId', '285');
+    }
 
-    /*return this.storage.keys()
-        .then(keys => Promise.all(keys.map(k => this.storage.get(k))));*/
-  }
 
-  getStorageVariables() {
-    this.storage.forEach( (storageValues ) => {
-      console.log(storageValues);
-    });
-    this.storage.get('projectName').then(value => {
-      this.projectName = value;
-    });
-    this.storage.get('pyWallServerURL').then(value => {
-      this.pyWallServer = value;
-    });
-    this.storage.get('pySyncServerURL').then(value => {
-      this.syncServer = value;
-    });
-    this.storage.get('sprintId').then(value => {
-      this.sprintId = value;
-    });
-  }
+    setStorageVariables() {
+        // setStorageVariables(projectName: string, pyWallServerURL: string, pySyncServerURL: string, sprintId: string) {
+        this.storage.set('projectName', this.projectName);
+        this.storage.set('pyWallServer', this.pyWallServer);
+        this.storage.set('syncServer', this.syncServer);
+        this.storage.set('sprintId', this.sprintId);
+    }
 
-  getProjectName(): string {
-    return this.projectName;
-  }
+    getStorageVariables2() {
+        return this.storage.keys().then(keys => {
+            Promise.all(keys.map(key => console.log(this.storage.get(key))));
+        });
 
-  getSprintId(): string {
-    return this.sprintId;
-  }
+        /*return this.storage.keys()
+            .then(keys => Promise.all(keys.map(k => this.storage.get(k))));*/
+    }
 
-  isMock(): boolean {
-    return this.mock;
-  }
+    getStorageVariables() {
+/*        this.storage.forEach((storageValues) => {
+            console.log(storageValues);
+        });*/
+        this.storage.get('projectName').then(value => {
+            this.projectName = value;
+        });
+        this.storage.get('pyWallServer').then(value => {
+            this.pyWallServer = value;
+        });
+        this.storage.get('syncServer').then(value => {
+            this.syncServer = value;
+        });
+        this.storage.get('sprintId').then(value => {
+            this.sprintId = value;
+        });
+    }
 
-  /**
-   * components can subscribe to this observable to be notified when settings change and they need to reload data
-   * @returns {Observable<void>}
-   */
-  getUpdateObservable(): Observable<void> {
-    return this.updateSubject.asObservable();
-  }
+    getProjectName(): string {
+        return this.projectName;
+    }
 
-  /**
-   * this function will inform all listeners to the update observable
-   * and saves the settings to local storage
-   */
-  emitSettingsUpdate(): void {
-    this.updateSubject.next();
-  }
+    getSprintId(): string {
+        return this.sprintId;
+    }
 
-  /**
-   * Sets a new projectName and persists the new setting to localstorage
-   */
-  setProjectName(projectName: string): void {
-    this.projectName = projectName;
-    localStorage.setItem('projectName', this.projectName);
-  }
+    getPyWall(): string {
+        console.log('this.pyWallServer ' + this.pyWallServer);
+        return this.pyWallServer;
+    }
 
-  /**
-   * Sets a new sprintId and persists the new setting to localstorage
-   */
-  setSprintId(sprintId: string): void {
-    this.sprintId = sprintId;
-    localStorage.setItem('sprintId', this.sprintId);
-  }
+    getSyncServer(): string {
+        return this.syncServer;
+    }
 
-  /*
-  mockStorageVariables() {
-      this.storage.set('pyWallServerURL', 'http://localhost:8000');
-      this.storage.set('pySyncServerURL', 'http://localhost:9091');
-      this.storage.set('projectName', 'AWDEMO');
-      this.storage.set('sprintId', '213');
-  }*/
+    isMock(): boolean {
+        return this.mock;
+    }
+
+    /**
+     * components can subscribe to this observable to be notified when settings change and they need to reload data
+     * @returns {Observable<void>}
+     */
+    getUpdateObservable(): Observable<void> {
+        return this.updateSubject.asObservable();
+    }
+
+    /**
+     * this function will inform all listeners to the update observable
+     * and saves the settings to local storage
+     */
+    emitSettingsUpdate(): void {
+        this.updateSubject.next();
+    }
+
+    /**
+     * Sets a new projectName and persists the new setting to localstorage
+     */
+    setProjectName(projectName: string): void {
+        this.projectName = projectName;
+        localStorage.setItem('projectName', this.projectName);
+    }
+
+    /**
+     * Sets a new sprintId and persists the new setting to localstorage
+     */
+    setSprintId(sprintId: string): void {
+        this.sprintId = sprintId;
+        localStorage.setItem('sprintId', this.sprintId);
+    }
 
 }

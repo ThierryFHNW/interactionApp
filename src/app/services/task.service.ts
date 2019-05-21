@@ -24,18 +24,23 @@ export interface PlannedTask {
 // def get_plannedTasks(project_key, sprint_id):
 
 export class TaskService {
+  private mockedURL = '/assets/data/tasks.json';
   private projectBaseURL: string;
 
   constructor(private http: HttpClient,
               private settingsService: SettingsService,
-              private messageService: MessageService) {
-    this.projectBaseURL = `${this.settingsService.pyWallServer}/projects`;
+              private messageService: MessageService)
+   {
+     this.projectBaseURL = `${this.settingsService.pyWallServer}/projects`;
+     console.log('this.projectBaseURL 1: ' + this.projectBaseURL
+    );
   }
 
   list(projectName: string, sprintId: string): Observable<any> {
 
     if (!this.settingsService.isMock()) {
-      console.log('this.projectBaseURL: ' + this.projectBaseURL);
+      this.projectBaseURL = `${this.settingsService.pyWallServer}/projects`;
+      console.log('this.projectBaseURL 2: ' + this.projectBaseURL);
       const targetURL = this.projectBaseURL + `/plannedtasks/${projectName}/${sprintId}`;
       console.log('targetURL: ' + targetURL);
       this.messageService.sendDebug(`PlannedTaskService get called on project ${projectName} and sprint ${sprintId}`);
@@ -45,11 +50,11 @@ export class TaskService {
     return null;
   }
 
-  create(data: any) {
+  create(data: Task) {
     if (!this.settingsService.isMock()) {
       const targetURL = this.projectBaseURL + `/plannedtasks`;
       this.messageService.sendDebug(`PlannedTaskService post called`);
-      return this.http.post<any>(targetURL, data);
+      return this.http.post<any>(targetURL, Task);
     }
 
     return null;
@@ -96,15 +101,7 @@ export class TaskService {
     return tasks;
   }
 
-/*  HTTP REQUEST
-
-  private url = '/assets/data/tasks.json';
-  private urlPyWall = 'http://localhost:8000';
-
-  constructor(private http: HttpClient) {
+  getMockedTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.mockedURL);
   }
-
-  getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.urlPyWall);
-  }*/
 }

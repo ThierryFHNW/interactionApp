@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Tasks</ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Tasks</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content
@@ -13,34 +13,92 @@
         (ionScroll)="logScrolling($event)"
         (ionScrollEnd)="logScrollEnd()">
 
-  <!-- Searchbar maybe ionInput is broke -->
-  <ion-searchbar text-center placeholder="Task suchen" (ionInput)="searchTasks($event)"></ion-searchbar>
+    <!-- Searchbar maybe ionInput is broke -->
+    <ion-searchbar text-center placeholder="Task suchen" (ionInput)="searchTasks($event)"></ion-searchbar>
+    <ion-button (click)="updateData()">updateData</ion-button>
 
-  <!-- Check if storage variables are accesible -->
-  <p>Paragraph: {{pyWallServerURL}}</p>
+    <!-- Check if storage variables are accesible -->
+    <p>{{settingsService.projectName}}</p>
+    <p>{{settingsService.pyWallServer}}</p>
+    <p>{{settingsService.syncServer}}</p>
+    <p>{{settingsService.sprintId}}</p>
 
-  <!-- GET: List of Tasks -->
-  <ion-list>
-    <ion-item *ngFor="let task of tasks" [routerLink]="['/tasks', value]" routerDirection="forward">
-      <ion-label text-center>
-        <h3>{{task.name}}</h3>
-      </ion-label>
-      <ion-icon name="close-circle" slot="end" (click)="remove()"></ion-icon>
-    </ion-item>
-  </ion-list>
+    <!-- Get list of Tasks as List -->
+    <ion-list>
+        <ion-item *ngFor="let task of plannedTasks" [routerLink]="['/tasks', value]" routerDirection="forward">
+            <ion-label text-center>
+                <h3>{{task.summary}}</h3>
+                <p>{{task.description}}</p>
+                <p>{{task.estimate}}</p>
+            </ion-label>
+            <ion-icon name="close-circle" slot="end" (click)="remove()"></ion-icon>
+        </ion-item>
+    </ion-list>
 
-  <ion-button (click)="updateData()">updateData</ion-button>
-  <ion-button (click)="consoleLog()">consoleLog</ion-button>
-  <ion-button (click)="httpGetTasks()">httpGetTasks</ion-button>
+    <!-- Get list of Tasks as Cards -->
+    <ion-card *ngFor="let task of plannedTasks" [routerLink]="['/tasks', value]" routerDirection="forward">
+        <ion-card-content>
+        <h5>{{task.summary}}</h5>
+            <p>{{task.description}}</p>
+            <p>{{task.estimate}}</p>
+        </ion-card-content>
+    </ion-card>
 
-  <!-- Button to create a new Task -->
-  <ion-fab vertical="bottom" horizontal="center">
-    <ion-fab-button [routerLink]="['/tasks', value]" routerDirection="forward">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 
-  <!--Modal for the tasks page to open a task-->
-  <!--https://ionicframework.com/docs/v3/components/#modals-->
+    <!-- List of Sliding Items for Delete Interaction -->
+    <ion-list>
+        <ion-item-sliding>
+            <ion-item>
+                <ion-label>Item</ion-label>
+            </ion-item>
+            <ion-item-options side="end">
+                <ion-item-option (click)="unread(item)">Unread</ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+
+        <ion-item-sliding>
+            <ion-item>
+                <ion-label>Item</ion-label>
+            </ion-item>
+            <ion-item-options side="end">
+                <ion-item-option (click)="unread(item)">Unread</ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+
+    <!-- List of Text Items -->
+    <ion-list>
+        <ion-item>
+            <ion-label>Pokémon Yellow</ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-label>Mega Man X</ion-label>
+        </ion-item>
+    </ion-list>
+
+    <!-- List of Input Items -->
+    <ion-list>
+        <ion-item>
+            <ion-label>Input</ion-label>
+            <ion-input></ion-input>
+        </ion-item>
+    </ion-list>
+
+    <ion-button (click)="getAllTasksFromSprint()">getAllTasksFromSprint</ion-button>
+    <ion-button (click)="updateData()">updateData</ion-button>
+    <ion-button (click)="httpGetTasks()">httpGetTasks</ion-button>
+    <ion-button (click)="consoleLog()">getTask from REST API</ion-button>
+
+    <ion-button (click)="createTask()">createTask</ion-button>
+
+    <!-- Button to create a new Task -->
+    <ion-fab vertical="bottom" horizontal="center">
+        <ion-fab-button [routerLink]="['/tasks', value]" routerDirection="forward">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+    <!--Modal for the tasks page to open a task-->
+    <!--https://ionicframework.com/docs/v3/components/#modals-->
 
 </ion-content>

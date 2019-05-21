@@ -16,27 +16,19 @@ import { FormBuilder } from "@angular/forms";
 })
 export class TasksPage implements OnInit {
     private plannedTasks: Task[] = [];
-    private updateEvent: Subscription;
-    private subscriptions: Subscription[] = [];
-    private syncEvent: Subscription;
-    private intervalSubscription: Subscription;
-
-    pyWallServerURL: string;
-    pySyncServerURL: string;
-    projectName: string;
-    sprintId: string;
     tasks: Observable<any>;
+    taskObject: Task;
 
-    constructor(private taskService: TaskService, private settingsService: SettingsService) {
-        /* this.initializeTasks();*/
+    constructor(private settingsService: SettingsService, private taskService: TaskService) {
+        this.settingsService.mockStorageVariables();
+        this.settingsService.getStorageVariables();
     }
 
     ngOnInit() {
-        /*this.mockStorageVariables();
-        this.getStorageVariables();
-        this.initializeTasks();*/
-        this.tasks = this.httpGetTasks();
-        console.log(this.tasks);
+        // this.settingsService.mockStorageVariables();
+        // this.settingsService.getStorageVariables();
+/*        this.tasks = this.httpGetTasks();
+        console.log(this.tasks);*/
     }
 
     httpGetTasks(): Observable<any> {
@@ -54,24 +46,29 @@ export class TasksPage implements OnInit {
         }
     }
 
+/*    createTask(event: any) {
+        // use a html toast to return success message
+        const obj = this;
+        this.createTaskDialogRef = this.addTaskDialog.open(CreateTaskDialogComponent, {
+            data: {
+                summary: null,
+                description: null,
+                projectKey: this.settingsService.getProjectName(),
+                sprintId: this.settingsService.getSprintId()
+            }
+        });
+
+        this.createTaskDialogRef.afterClosed().subscribe(taskData => {
+            if (taskData) {
+                this.plannedTaskService.create(taskData).subscribe(res => {
+                    const newPlannedTask = new Task(res.id, res.summary, res.description, null, null, null, null, null, null, null, null, null);
+                    this.plannedTasks.push(newPlannedTask);
+                });
+            }
+        });
+    }*/
+
     consoleLog() {
         console.log(this.plannedTasks);
     }
-
-    /*initializeTasks() {
-        this.taskService.getTasks()
-            .subscribe( data => this.tasks = data);
-        console.log(this.tasks);
-        console.log(this.tasks.values());
-    }*/
-
-
-    /*
-    mockStorageVariables() {
-        this.storage.set('pyWallServerURL', 'http://localhost:8000');
-        this.storage.set('pySyncServerURL', 'http://localhost:9091');
-        this.storage.set('projectName', 'AWDEMO');
-        this.storage.set('sprintId', '213');
-    }*/
-
 }
