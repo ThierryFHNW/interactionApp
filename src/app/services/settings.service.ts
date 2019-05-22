@@ -2,30 +2,31 @@ import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs/index';
 import {Storage} from '@ionic/storage';
 
+export interface Setting {
+    projectName: string;
+    pyWallServer: string;
+    syncServer: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class SettingsService {
     // when it exists in localStorage it becomes that value otherwise its null which is its default value anyway
     // TODO rename to projectKey
+    projectName: string;
     pyWallServer: string;
     syncServer: string;
-    projectName: string;
     sprintId: string;
     updateSubject = new Subject<void>();
 
-    /**
-     * if this is set to true the rest services should return local test data and not send update requests to the server
-     * this setting can be used when jira is down
-     */
-    private mock = false;
-
     constructor(private storage: Storage) {
         this.mockStorageVariables();
+        // this.setStorageVariables();
         this.getStorageVariables();
     }
 
-    mockStorageVariables() {
+   mockStorageVariables() {
         this.storage.set('projectName', 'AWTEST');
         this.storage.set('pyWallServer', 'http://localhost:8000');
         this.storage.set('syncServer', 'http://localhost:9091');
@@ -34,26 +35,35 @@ export class SettingsService {
 
 
     setStorageVariables() {
-        // setStorageVariables(projectName: string, pyWallServerURL: string, pySyncServerURL: string, sprintId: string) {
+    // setStorageVariables(projectName: string, pyWallServer: string, pySyncServer: string, sprintId: string) {
+        this.storage.set('projectName', this.projectName);
+        this.storage.set('pyWallServer', this.pyWallServer);
+        this.storage.set('syncServer', this.syncServer);
+        if (!this.sprintId) {
+            this.storage.set('sprintId', this.sprintId);
+        }
+    }
+
+    setStorageVariablesParameters(projectName: string, pyWallServer: string, pySyncServer: string, sprintId: string) {
         this.storage.set('projectName', this.projectName);
         this.storage.set('pyWallServer', this.pyWallServer);
         this.storage.set('syncServer', this.syncServer);
         this.storage.set('sprintId', this.sprintId);
     }
 
-    getStorageVariables2() {
+/*    getStorageVariables2() {
         return this.storage.keys().then(keys => {
             Promise.all(keys.map(key => console.log(this.storage.get(key))));
-        });
+        });*/
 
         /*return this.storage.keys()
-            .then(keys => Promise.all(keys.map(k => this.storage.get(k))));*/
-    }
+            .then(keys => Promise.all(keys.map(k => this.storage.get(k))));
+    }*/
 
     getStorageVariables() {
-/*        this.storage.forEach((storageValues) => {
+        this.storage.forEach((storageValues) => {
             console.log(storageValues);
-        });*/
+        });
         this.storage.get('projectName').then(value => {
             this.projectName = value;
         });
@@ -83,10 +93,6 @@ export class SettingsService {
 
     getSyncServer(): string {
         return this.syncServer;
-    }
-
-    isMock(): boolean {
-        return this.mock;
     }
 
     /**

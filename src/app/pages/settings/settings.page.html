@@ -1,13 +1,21 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
     <ion-title>Settings</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <input type="text" formControlName="firstName" required>
-  <p>    Form Status: {{ profileForm.status }}  </p>
-</ion-content>
+<!-- Button to create a new Task -->
+<ion-fab vertical="bottom" horizontal="center">
+  <ion-fab-button [routerLink]="['/setting', 'new']" routerDirection="forward">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+
 
 <!--<ion-content>
   <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()log" padding-right >

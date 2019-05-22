@@ -8,20 +8,27 @@
 </ion-header>
 
 <ion-content>
+
   <ion-card *ngIf="scannedCode">
-    <p>Result from Scan: {{ scannedCode }}</p>
+    <p>scannedCode: {{ scannedCode }}</p>
   </ion-card>
 
   <ion-card *ngIf="scannedCodeArray">
-    <p>Array: {{ scannedCode }}</p>
-
+    <p>scannedCodeArray: {{ scannedCodeArray }}</p>
     <div *ngIf="scannedCodeArray">
-      <p>From Storage</p>
+      <p>From SettingsService</p>
       <p>{{projectName}}, {{pyWallServer}}, {{syncServer}}, {{sprintId}}</p>
     </div>
   </ion-card>
+
+
+  <ion-card>
+      <p>From SettingsService</p>
+      <p>{{settingsService.getProjectName()}}, {{settingsService.getPyWall()}}, {{settingsService.getSyncServer()}}, {{settingsService.getSprintId()}}</p>
+  </ion-card>
+
   <ion-item *ngFor="let storageValues of storage;">
-    <p>{{values}}</p>
+    <p>{{storageValues}}</p>
   </ion-item>
 
 </ion-content>

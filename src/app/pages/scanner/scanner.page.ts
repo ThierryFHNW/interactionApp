@@ -25,8 +25,6 @@ export class ScannerPage implements OnInit {
         this.settingsService.pyWallServer = this.scannedCodeArray[1];
         this.settingsService.syncServer = this.scannedCodeArray[2];
         this.settingsService.sprintId = this.scannedCodeArray[3];
-        this.settingsService.setStorageVariables();
-        this.settingsService.getStorageVariables();
       }
     });
   }

@@ -6,8 +6,10 @@ const routes: Routes = [
   { path: 'home', loadChildren: './pages/home/home.module#HomePageModule' },
   { path: 'scanner', loadChildren: './pages/scanner/scanner.module#ScannerPageModule' },
   { path: 'tasks', loadChildren: './pages/tasks/tasks.module#TasksPageModule' },
-  { path: 'task', loadChildren: './pages/task/task.module#TaskPageModule' },
+  { path: 'task/:id', loadChildren: './pages/task/task.module#TaskPageModule' },
   { path: 'settings', loadChildren: './pages/settings/settings.module#SettingsPageModule' },
+  { path: 'setting/:id', loadChildren: './pages/setting/setting.module#SettingPageModule' },
+
 ];
 
 @NgModule({

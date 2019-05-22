@@ -24,6 +24,10 @@ export class SettingsPage implements OnInit {
         }),
     });
 
+    createSetting() {
+
+    }
+
 /*    get project() {
         return this.settingsForm.get('project');
     }

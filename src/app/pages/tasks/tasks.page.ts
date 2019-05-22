@@ -25,8 +25,8 @@ export class TasksPage implements OnInit {
     }
 
     ngOnInit() {
-        // this.settingsService.mockStorageVariables();
-        // this.settingsService.getStorageVariables();
+        this.settingsService.mockStorageVariables();
+        this.settingsService.getStorageVariables();
 /*        this.tasks = this.httpGetTasks();
         console.log(this.tasks);*/
     }
@@ -35,13 +35,12 @@ export class TasksPage implements OnInit {
         return this.taskService.list(this.settingsService.projectName, this.settingsService.sprintId);
     }
 
-    updateData() {
+    fetchData() {
         const obj = this;
         if (this.settingsService.getProjectName() && this.settingsService.getSprintId()) {
            this.taskService.list(this.settingsService.getProjectName(), this.settingsService.getSprintId())
                 .subscribe(plannedTasks => {
                     this.plannedTasks = plannedTasks;
-                    // this.intervalSubscription = this.getIntervalSubscription();
                 });
         }
     }
