@@ -9,6 +9,9 @@ const routes: Routes = [
   { path: 'task/:id', loadChildren: './pages/task/task.module#TaskPageModule' },
   { path: 'settings', loadChildren: './pages/settings/settings.module#SettingsPageModule' },
   { path: 'setting/:id', loadChildren: './pages/setting/setting.module#SettingPageModule' },
+  { path: 'create-setting', loadChildren: './pages/create-setting/create-setting.module#CreateSettingPageModule' },
+  { path: 'edit-setting/:id', loadChildren: './pages/edit-setting/edit-setting.module#EditSettingPageModule' },
+
 
 ];
 

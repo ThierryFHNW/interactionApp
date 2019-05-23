@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import {forEach} from '@angular-devkit/schematics';
 
 export interface Server {
   id: number,
@@ -18,6 +19,10 @@ export class StorageService {
 
   constructor(private storage: Storage) { }
 
+  getServer(id: number): Promise<Server> {
+    return this.storage.get(SERVERS_KEY);
+  }
+
   // CREATE
   addServer(server: Server): Promise<any> {
     return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
@@ -29,6 +34,22 @@ export class StorageService {
       }
     });
   }
+
+    // FIND SERVER BY ID
+    getServerById(id: number): Promise<Server> {
+        return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
+            if (!servers || servers.length === 0) {
+                return null;
+            }
+            for (const server of servers) {
+                if (server.id === id) {
+                    console.log(server);
+                    return server;
+                }
+            }
+            return null;
+        });
+    }
 
   // READ
   getServers(): Promise<Server[]> {

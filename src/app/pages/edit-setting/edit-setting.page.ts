@@ -5,15 +5,15 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-setting',
-  templateUrl: './setting.page.html',
-  styleUrls: ['./setting.page.scss'],
+  templateUrl: './edit-setting.page.html',
+  styleUrls: ['./edit-setting.page.scss'],
 })
 
-
-export class SettingPage implements OnInit {
+export class EditSettingPage implements OnInit {
   servers: Server[] = [];
   newServer: Server = <Server> {};
-  serverId: string;
+  editServer: Server = <Server> {};
+  serverId: number;
 
   @ViewChild('mylist')mylist: IonList;
 
@@ -24,8 +24,14 @@ export class SettingPage implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    console.log(this.servers);
+    const id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
+    console.log(id);
+    this.storageService.getServerById(id).then(server => {
+      this.editServer.id = server.id;
+      this.editServer.projectName = server.projectName;
+      this.editServer.pyWallServer = server.pyWallServer;
+      this.editServer.syncServer = server.syncServer;
+    });
     this.serverId = id;
   }
 

@@ -5,12 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-setting',
-  templateUrl: './setting.page.html',
-  styleUrls: ['./setting.page.scss'],
+  templateUrl: './create-setting.page.html',
+  styleUrls: ['./create-setting.page.scss'],
 })
 
 
-export class SettingPage implements OnInit {
+export class CreateSettingPage implements OnInit {
   servers: Server[] = [];
   newServer: Server = <Server> {};
   serverId: string;

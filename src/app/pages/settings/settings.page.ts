@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { Platform, ToastController, IonList } from '@ionic/angular';
 import {Server, StorageService} from '../../services/storage.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-settings',
@@ -15,7 +16,7 @@ export class SettingsPage implements OnInit {
 
     @ViewChild('mylist')mylist: IonList;
 
-    constructor(private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
+    constructor(private router: Router, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
         this.plt.ready().then(() => {
             this.loadServers();
         });
@@ -44,7 +45,8 @@ export class SettingsPage implements OnInit {
 
     // UPDATE
     updateServer(server: Server) {
-        server.projectName = `UPDATED: ${server.projectName}`;
+        this.router.navigate(['/edit-setting', server.id ]);
+        server.projectName = `U: ${server.projectName}`;
         server.modified = Date.now();
 
         this.storageService.updateServer(server).then(server => {

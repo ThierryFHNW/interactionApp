@@ -20,8 +20,8 @@
         <ion-label text-wrap>
           <h3>{{ server.projectName }}</h3>
           <ion-text color="secondary">
-            <p>{{ server.projectName }}</p>
             <p>{{ server.pyWallServer }}</p>
+            <p>{{ server.syncServer }}</p>
           </ion-text>
           <p>{{ server.modified | date:'short'}}</p>
         </ion-label>
@@ -37,7 +37,7 @@
 
   <!-- Button to create a new Task -->
   <ion-fab vertical="bottom" horizontal="center">
-    <ion-fab-button [routerLink]="['/setting', 'new']" routerDirection="forward">
+    <ion-fab-button [routerLink]="['/create-setting']" routerDirection="forward">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

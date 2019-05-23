@@ -16,8 +16,13 @@
 
 <ion-content>
     <ion-item>
+        <ion-label position="floating">ID</ion-label>
+        <ion-input readonly placeholder="newServer.id" [(ngModel)]="serverId"></ion-input>
+    </ion-item>
+
+    <ion-item>
         <ion-label position="floating">Project</ion-label>
-        <ion-input [(ngModel)]="newServer.projectName"></ion-input>
+        <ion-input placeholder="{{newServer.projectName}}" [(ngModel)]="newServer.projectName"></ion-input>
     </ion-item>
 
     <ion-item>
