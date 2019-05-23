@@ -20,15 +20,11 @@ export class TasksPage implements OnInit {
     taskObject: Task;
 
     constructor(private settingsService: SettingsService, private taskService: TaskService) {
-        this.settingsService.mockStorageVariables();
         this.settingsService.getStorageVariables();
     }
 
     ngOnInit() {
-        this.settingsService.mockStorageVariables();
         this.settingsService.getStorageVariables();
-/*        this.tasks = this.httpGetTasks();
-        console.log(this.tasks);*/
     }
 
     httpGetTasks(): Observable<any> {
@@ -45,29 +41,7 @@ export class TasksPage implements OnInit {
         }
     }
 
-/*    createTask(event: any) {
-        // use a html toast to return success message
-        const obj = this;
-        this.createTaskDialogRef = this.addTaskDialog.open(CreateTaskDialogComponent, {
-            data: {
-                summary: null,
-                description: null,
-                projectKey: this.settingsService.getProjectName(),
-                sprintId: this.settingsService.getSprintId()
-            }
-        });
-
-        this.createTaskDialogRef.afterClosed().subscribe(taskData => {
-            if (taskData) {
-                this.plannedTaskService.create(taskData).subscribe(res => {
-                    const newPlannedTask = new Task(res.id, res.summary, res.description, null, null, null, null, null, null, null, null, null);
-                    this.plannedTasks.push(newPlannedTask);
-                });
-            }
-        });
-    }*/
-
     consoleLog() {
-        console.log(this.plannedTasks);
+        console.log("THIS.PLANNEDTASK: " + this.plannedTasks);
     }
 }

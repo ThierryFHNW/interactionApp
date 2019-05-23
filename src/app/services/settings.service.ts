@@ -1,12 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs/index';
 import {Storage} from '@ionic/storage';
-
-export interface Setting {
-    projectName: string;
-    pyWallServer: string;
-    syncServer: string;
-}
+import {Setting} from '../models/setting';
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +9,7 @@ export interface Setting {
 export class SettingsService {
     // when it exists in localStorage it becomes that value otherwise its null which is its default value anyway
     // TODO rename to projectKey
+    setting: Setting;
     projectName: string;
     pyWallServer: string;
     syncServer: string;
@@ -22,11 +18,16 @@ export class SettingsService {
 
     constructor(private storage: Storage) {
         this.mockStorageVariables();
-        // this.setStorageVariables();
         this.getStorageVariables();
+        // this.getStorageVariables();
     }
 
-   mockStorageVariables() {
+    // keys() returns a promise to get store values
+    // length() to get number of stored values
+    // ready() resolves if store is ready
+    // set(key) returns a promise that resolves when key and value are set
+    // get(key)
+    mockStorageVariables() {
         this.storage.set('projectName', 'AWTEST');
         this.storage.set('pyWallServer', 'http://localhost:8000');
         this.storage.set('syncServer', 'http://localhost:9091');
@@ -35,13 +36,16 @@ export class SettingsService {
 
 
     setStorageVariables() {
-    // setStorageVariables(projectName: string, pyWallServer: string, pySyncServer: string, sprintId: string) {
-        this.storage.set('projectName', this.projectName);
-        this.storage.set('pyWallServer', this.pyWallServer);
-        this.storage.set('syncServer', this.syncServer);
-        if (!this.sprintId) {
-            this.storage.set('sprintId', this.sprintId);
-        }
+        // setStorageVariables(projectName: string, pyWallServer: string, pySyncServer: string, sprintId: string) {
+        const p1 = this.storage.set('projectName', this.projectName);
+        const p2 = this.storage.set('pyWallServer', this.pyWallServer);
+        const p3 = this.storage.set('syncServer', this.syncServer);
+        const p4 = this.storage.set('sprintId', this.sprintId);
+        console.log('PromiseObject1: ' + p1);
+        console.log('P2: ' + p2);
+        console.log('P3: ' + p3);
+        console.log('P4: ' + p4);
+        Promise.all([p1, p2, p3, p4]).then(values => console.log(values));
     }
 
     setStorageVariablesParameters(projectName: string, pyWallServer: string, pySyncServer: string, sprintId: string) {
@@ -51,29 +55,27 @@ export class SettingsService {
         this.storage.set('sprintId', this.sprintId);
     }
 
-/*    getStorageVariables2() {
-        return this.storage.keys().then(keys => {
-            Promise.all(keys.map(key => console.log(this.storage.get(key))));
-        });*/
+    getStorageVariablesForEach() {
+        this.storage.forEach((value, key, iterationNumber) => {
+            console.log(iterationNumber + ', ' + key + ', ' + value);
+        });
+    }
 
-        /*return this.storage.keys()
-            .then(keys => Promise.all(keys.map(k => this.storage.get(k))));
-    }*/
 
-    getStorageVariables() {
+    async getStorageVariables() {
         this.storage.forEach((storageValues) => {
             console.log(storageValues);
         });
-        this.storage.get('projectName').then(value => {
+        await this.storage.get('projectName').then(value => {
             this.projectName = value;
         });
-        this.storage.get('pyWallServer').then(value => {
+        await this.storage.get('pyWallServer').then(value => {
             this.pyWallServer = value;
         });
-        this.storage.get('syncServer').then(value => {
+        await this.storage.get('syncServer').then(value => {
             this.syncServer = value;
         });
-        this.storage.get('sprintId').then(value => {
+        await this.storage.get('sprintId').then(value => {
             this.sprintId = value;
         });
     }
@@ -116,7 +118,7 @@ export class SettingsService {
      */
     setProjectName(projectName: string): void {
         this.projectName = projectName;
-        localStorage.setItem('projectName', this.projectName);
+        this.storage.set('projectName', this.projectName);
     }
 
     /**
@@ -124,7 +126,7 @@ export class SettingsService {
      */
     setSprintId(sprintId: string): void {
         this.sprintId = sprintId;
-        localStorage.setItem('sprintId', this.sprintId);
+        this.storage.set('sprintId', this.sprintId);
     }
 
 }

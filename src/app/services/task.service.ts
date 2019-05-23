@@ -31,8 +31,7 @@ export class TaskService {
                 private settingsService: SettingsService,
                 private messageService: MessageService) {
         this.projectBaseURL = `${this.settingsService.getPyWall()}/projects`;
-        console.log('this.projectBaseURL 1: ' + this.projectBaseURL
-        );
+        console.log('this.projectBaseURL 1: ' + this.projectBaseURL);
     }
 
     list(projectName: string, sprintId: string): Observable<any> {

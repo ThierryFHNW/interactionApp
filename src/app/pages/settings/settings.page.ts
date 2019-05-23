@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { SettingsService } from '../../services/settings.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import { Platform, ToastController, IonList } from '@ionic/angular';
+import {Server, StorageService} from '../../services/storage.service';
 
 @Component({
     selector: 'app-settings',
@@ -9,49 +9,66 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 // this is the controller now, no function in brackets
 export class SettingsPage implements OnInit {
+    servers: Server[] = [];
 
-    constructor(private fb: FormBuilder, private settingsService: SettingsService) {
+    newServer: Server = <Server> {};
+
+    @ViewChild('mylist')mylist: IonList;
+
+    constructor(private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
+        this.plt.ready().then(() => {
+            this.loadServers();
+        });
     }
 
-    profileForm = this.fb.group({
-        firstName: ['', Validators.required],
-        lastName: [''],
-        address: this.fb.group({
-            street: [''],
-            city: [''],
-            state: [''],
-            zip: ['']
-        }),
-    });
+    ngOnInit(): void {}
 
-    createSetting() {
+    // CREATE
+    addServer() {
+        this.newServer.modified = Date.now();
+        this.newServer.id = Date.now();
 
+        this.storageService.addServer(this.newServer).then(server => {
+            this.newServer = <Server>{};
+            this.showToast('Server added!')
+            this.loadServers(); // Or add it to the array directly
+        });
     }
 
-/*    get project() {
-        return this.settingsForm.get('project');
+    // READ
+    loadServers() {
+        this.storageService.getServers().then(servers => {
+            this.servers = servers;
+        });
     }
 
-    get pyWall() {
-        return this.settingsForm.get('pywall');
+    // UPDATE
+    updateServer(server: Server) {
+        server.projectName = `UPDATED: ${server.projectName}`;
+        server.modified = Date.now();
+
+        this.storageService.updateServer(server).then(server => {
+            this.showToast('Server updated!');
+            this.mylist.closeSlidingItems(); // Fix or sliding is stuck afterwards
+            this.loadServers(); // Or update it inside the array directly
+        });
     }
 
-    get syncServer() {
-        return this.settingsForm.get('syncserver');
+    // DELETE
+    deleteServer(server: Server) {
+        this.storageService.deleteServer(server.id).then(server => {
+            this.showToast('Server removed!');
+            this.mylist.closeSlidingItems(); // Fix or sliding is stuck afterwards
+            this.loadServers(); // Or splice it from the array directly
+        });
     }
 
-
-    settingsForm = this.fb.group({
-        project: [''],
-        pywall: [''],
-        syncserver: [''],
-    })
-
-    onSubmit() {
-        console.log(this.settingsForm.value);
-    }*/
-
-    ngOnInit(): void {
-
+    // Helper
+    async showToast(msg) {
+        const toast = await this.toastController.create({
+            message: msg,
+            duration: 2000
+        });
+        toast.present();
     }
 }

@@ -1,0 +1,44 @@
+const posts = [
+  { title: "something1", body: "something1body" },
+  { title: "something2", body: "something2body" }
+];
+
+`<li>${post.title}</li>` = small backslashes = template syntax / literal to input stuff into html
+
+// PROMISE CREATION
+function createPost(post) {
+ return new Promise((resolve, reject) => {
+  setTimeout(() => {
+   posts.push(post);
+   const error = false;
+   if (!error) {
+    resolve();
+   } else {
+     reject('Error: Something went wrong');
+   }
+  }, 2000);
+ });
+}
+
+// PROMISE USAGE --> calls getPosts after createPost
+createPost({ title: 'Post Three', body: 'This is post 3' })
+ .then(getPosts)
+ .catch(err => console.log(err));
+
+// PROMISE.ALL
+Promise.all([p1, p2, p3]).then(values => console.log(values));
+
+// ASYNC FETCH
+async function fetchUsers() {
+ const res = await fetch('https://...');
+ const data = await res.json();
+ console.log(data);
+}
+fetchUsers();
+
+// ASYNC NORMAL
+async function init() {
+ await createPost({ title: 'Post 3', body: 'Blabla' });
+ getPosts();
+}
+init();
