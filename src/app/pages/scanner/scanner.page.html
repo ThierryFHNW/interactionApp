@@ -3,39 +3,29 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="useScannerMock(scannedCodeArrayMock)"><ion-icon name="refresh"></ion-icon></ion-button>
+    </ion-buttons>
     <ion-title>Scanner</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-card *ngIf="scannedCode">
+  <!--<ion-card *ngIf="scannedCode">
     <p>scannedCode: {{ scannedCode }}</p>
   </ion-card>
 
-  <ion-card *ngIf="scannedCodeArray">
-    <p>scannedCodeArray: {{ scannedCodeArray }}</p>
-    <div *ngIf="scannedCodeArray">
-      <p>From SettingsService</p>
-      <p>{{projectName}}, {{pyWallServer}}, {{syncServer}}, {{sprintId}}</p>
-    </div>
+  <ion-card *ngIf="scannedCodeArrayMock">
+    <p>scannedCode: {{ scannedCodeArrayMock.values() }}</p>
   </ion-card>
-
-
-  <ion-card>
-      <p>From SettingsService</p>
-      <p>{{settingsService.getProjectName()}}, {{settingsService.getPyWall()}}, {{settingsService.getSyncServer()}}, {{settingsService.getSprintId()}}</p>
-  </ion-card>
-
-  <ion-item *ngFor="let storageValues of storage;">
-    <p>{{storageValues}}</p>
+-->
+  <ion-item>
+    <p>{{newServer}}: {{newServer.projectName}} , {{newServer.pyWallServer}}, {{newServer.syncServer}}, {{newServer.sprintId}}</p>
   </ion-item>
 
-  <ion-card>
-    <p>From StorageService</p>
-    <p>{{settingsService.getProjectName()}}, {{settingsService.getPyWall()}}, {{settingsService.getSyncServer()}}, {{settingsService.getSprintId()}}</p>
-  </ion-card>
-
-
+<!--  <ion-item *ngFor="let server of servers;">
+    <p>{{server.projectName}}</p>
+  </ion-item>-->
 
 </ion-content>

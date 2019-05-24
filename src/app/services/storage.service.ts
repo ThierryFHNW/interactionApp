@@ -12,7 +12,7 @@ export interface Server {
 }
 
 const SERVERS_KEY = 'my_servers';
-const SELECTED_KEY = 'selected_server';
+const SELECTED_KEY = 'selectedServer';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,17 @@ export class StorageService {
 
   constructor(private storage: Storage) {
   }
+
+  // SET SELECTED SERVER
+  setSelectedServer(server: Server) {
+      this.storage.set(SELECTED_KEY, server).then();
+  }
+
+  // LOAD SELECTED SERVER
+  loadSelectedServer(): Promise<Server> {
+    return this.storage.get(SELECTED_KEY);
+  }
+
 
   // CREATE
   addServer(server: Server): Promise<any> {

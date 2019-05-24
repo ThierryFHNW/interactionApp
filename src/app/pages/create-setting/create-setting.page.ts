@@ -25,7 +25,6 @@ export class CreateSettingPage implements OnInit {
 
   ngOnInit() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
-    console.log(this.servers);
     this.serverId = id;
   }
 

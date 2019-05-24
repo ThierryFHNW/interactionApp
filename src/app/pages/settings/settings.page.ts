@@ -16,7 +16,6 @@ export class SettingsPage implements OnInit {
 
     // USE DOM ELEMENT TO
     @ViewChild('mylist')mylist: IonList;
-    @ViewChild('myoption')myoption: Server;
 
     constructor(private router: Router, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
         this.plt.ready().then(() => {
@@ -26,20 +25,30 @@ export class SettingsPage implements OnInit {
 
     ngOnInit(): void {
         this.mylist.closeSlidingItems();
+        this.onSelectLoad();
     }
 
-    // KEEP SELECTED SERVER
-    onSelectChange(selectedValue: any) {
-        console.log('Selected: ', selectedValue);
-        console.log(selectedValue.detail.value);
-
-    }
-
-    // READ SERVERS FROM DB
+    // READ
     loadServers() {
         this.storageService.getServers().then(servers => {
             this.servers = servers;
         });
+    }
+
+    // KEEP SELECTED SERVER
+    onSelectChange(selectedValue: any) {
+        this.storageService.setSelectedServer(selectedValue.detail.value);
+        this.selectedServer = selectedValue.detail.value;
+        console.log('Set the selectedServer: ' + this.selectedServer + this.selectedServer.projectName);
+    }
+
+    // LOAD SELECTED SERVER
+    onSelectLoad() {
+        this.storageService.loadSelectedServer().then( server => {
+                this.selectedServer = server;
+                console.log("OnSelectLoad: " + this.selectedServer + this.selectedServer.projectName);
+            }
+        );
     }
 
     // NAVIGATE TO EDIT SITE

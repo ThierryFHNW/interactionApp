@@ -14,9 +14,6 @@
     <ion-searchbar text-center placeholder="Task suchen" (ionInput)="searchTasks($event)"></ion-searchbar>
     <ion-button (click)="fetchData()">fetchData</ion-button>
 
-    <!-- Check if storage variables are accesible -->
-    <p>{{settingsService.getProjectName()}} {{settingsService.pyWallServer}} {{settingsService.syncServer}} {{settingsService.sprintId}}</p>
-
       <!-- Get list of Tasks as List -->
     <ion-list>
         <ion-item *ngFor="let task of plannedTasks" [routerLink]="['/task', task.id]" routerDirection="forward">
