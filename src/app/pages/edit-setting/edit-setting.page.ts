@@ -11,11 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 
 export class EditSettingPage implements OnInit {
   servers: Server[] = [];
-  newServer: Server = <Server> {};
   editServer: Server = <Server> {};
-  serverId: number;
-
-  @ViewChild('mylist')mylist: IonList;
 
   constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
     this.plt.ready().then(() => {
@@ -24,26 +20,29 @@ export class EditSettingPage implements OnInit {
   }
 
   ngOnInit() {
-    const id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
-    console.log(id);
-    this.storageService.getServerById(id).then(server => {
-      this.editServer.id = server.id;
-      this.editServer.projectName = server.projectName;
-      this.editServer.pyWallServer = server.pyWallServer;
-      this.editServer.syncServer = server.syncServer;
-    });
-    this.serverId = id;
+    this.getServerByUrlParam();
   }
 
-  // CREATE
-  addServer() {
-    this.newServer.modified = Date.now();
-    this.newServer.id = Date.now();
+  // USES URL ID TO GET SERVER DATA
+  getServerByUrlParam() {
+    const id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.storageService.getServerById(id).then(server => {
+      this.editServer = server;
+      console.log('editServerID: ' + this.editServer.id);
+      console.log('editServerID: ' + this.editServer.projectName);
+      console.log('editServerID: ' + this.editServer.pyWallServer);
+      console.log('editServerID: ' + this.editServer.syncServer);
+      // this.storageService.updateServer(server).then(server )
+    });
+  }
 
-    this.storageService.addServer(this.newServer).then(server => {
-      this.newServer = <Server>{};
-      this.showToast('Server added!')
-      this.loadServers(); // Or add it to the array directly
+  // UPDATE
+  updateServer() {
+    this.editServer.modified = Date.now();
+
+    this.storageService.updateServer(this.editServer).then(server => {
+      this.showToast('Server updated!');
+      this.loadServers(); // Or update it inside the array directly
     });
   }
 
@@ -51,27 +50,6 @@ export class EditSettingPage implements OnInit {
   loadServers() {
     this.storageService.getServers().then(servers => {
       this.servers = servers;
-    });
-  }
-
-  // UPDATE
-  updateServer(server: Server) {
-    server.projectName = `UPDATED: ${server.projectName}`;
-    server.modified = Date.now();
-
-    this.storageService.updateServer(server).then(server => {
-      this.showToast('Server updated!');
-      this.mylist.closeSlidingItems(); // Fix or sliding is stuck afterwards
-      this.loadServers(); // Or update it inside the array directly
-    });
-  }
-
-  // DELETE
-  deleteServer(server: Server) {
-    this.storageService.deleteServer(server.id).then(server => {
-      this.showToast('Server removed!');
-      this.mylist.closeSlidingItems(); // Fix or sliding is stuck afterwards
-      this.loadServers(); // Or splice it from the array directly
     });
   }
 

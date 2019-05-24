@@ -24,12 +24,15 @@ const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
   imports: [
       BrowserModule,
       IonicModule.forRoot(),
-      IonicStorageModule.forRoot(),
       AppRoutingModule,
       SocketIoModule.forRoot(config),
       HttpClientModule,
       ReactiveFormsModule,
-      FormsModule
+      FormsModule,
+      IonicStorageModule.forRoot({
+          name: '__mydb',
+          driverOrder: ['indexeddb', 'sqlite', 'localstorage']
+      })
   ],
   providers: [
       StatusBar,

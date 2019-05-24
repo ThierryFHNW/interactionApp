@@ -4,10 +4,23 @@
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
     <ion-title>Settings</ion-title>
+    <ion-buttons slot="end">
+        <ion-button (click)="loadServers()"><ion-icon name="refresh"></ion-icon></ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-list-header>Select Server</ion-list-header>
+
+    <ion-item>
+      <ion-select (ionChange)="onSelectChange($event)" [(ngModel)]="selectedValue" placeholder="Select Server">
+        <ion-select-option *ngFor="let server of servers" [value]="server">{{server.projectName}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
   <ion-list #mylist>
 
     <ion-list-header>
@@ -28,7 +41,7 @@
       </ion-item>
 
       <ion-item-options side="end">
-        <ion-item-option color="secondary" (click)="updateServer(server)">Update</ion-item-option>
+        <ion-item-option color="secondary" (click)="editServer(server)">Update</ion-item-option>
         <ion-item-option color="danger" (click)="deleteServer(server)">Delete</ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
@@ -37,7 +50,7 @@
 
   <!-- Button to create a new Task -->
   <ion-fab vertical="bottom" horizontal="center">
-    <ion-fab-button [routerLink]="['/create-setting']" routerDirection="forward">
+    <ion-fab-button (click)="addServer()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

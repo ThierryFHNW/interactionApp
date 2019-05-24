@@ -11,10 +11,12 @@ import {Router} from '@angular/router';
 // this is the controller now, no function in brackets
 export class SettingsPage implements OnInit {
     servers: Server[] = [];
-
     newServer: Server = <Server> {};
+    selectedServer: Server = <Server> {};
 
+    // USE DOM ELEMENT TO
     @ViewChild('mylist')mylist: IonList;
+    @ViewChild('myoption')myoption: Server;
 
     constructor(private router: Router, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
         this.plt.ready().then(() => {
@@ -22,38 +24,34 @@ export class SettingsPage implements OnInit {
         });
     }
 
-    ngOnInit(): void {}
-
-    // CREATE
-    addServer() {
-        this.newServer.modified = Date.now();
-        this.newServer.id = Date.now();
-
-        this.storageService.addServer(this.newServer).then(server => {
-            this.newServer = <Server>{};
-            this.showToast('Server added!')
-            this.loadServers(); // Or add it to the array directly
-        });
+    ngOnInit(): void {
+        this.mylist.closeSlidingItems();
     }
 
-    // READ
+    // KEEP SELECTED SERVER
+    onSelectChange(selectedValue: any) {
+        console.log('Selected: ', selectedValue);
+        console.log(selectedValue.detail.value);
+
+    }
+
+    // READ SERVERS FROM DB
     loadServers() {
         this.storageService.getServers().then(servers => {
             this.servers = servers;
         });
     }
 
-    // UPDATE
-    updateServer(server: Server) {
+    // NAVIGATE TO EDIT SITE
+    editServer(server: Server) {
+        this.mylist.closeSlidingItems();
         this.router.navigate(['/edit-setting', server.id ]);
-        server.projectName = `U: ${server.projectName}`;
-        server.modified = Date.now();
+    }
 
-        this.storageService.updateServer(server).then(server => {
-            this.showToast('Server updated!');
-            this.mylist.closeSlidingItems(); // Fix or sliding is stuck afterwards
-            this.loadServers(); // Or update it inside the array directly
-        });
+    // NAVIGATE TO CREATE SITE
+    addServer() {
+        this.mylist.closeSlidingItems();
+        this.router.navigate(['create-setting']);
     }
 
     // DELETE

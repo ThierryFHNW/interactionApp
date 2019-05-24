@@ -3,24 +3,23 @@ import { Storage } from '@ionic/storage';
 import {forEach} from '@angular-devkit/schematics';
 
 export interface Server {
-  id: number,
-  projectName: string,
-  pyWallServer: string,
-  syncServer: string,
-  modified: number
+  id: number;
+  projectName: string;
+  pyWallServer: string;
+  syncServer: string;
+  sprintId: string;
+  modified: number;
 }
 
-const SERVERS_KEY = 'my-servers';
+const SERVERS_KEY = 'my_servers';
+const SELECTED_KEY = 'selected_server';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
 
-  constructor(private storage: Storage) { }
-
-  getServer(id: number): Promise<Server> {
-    return this.storage.get(SERVERS_KEY);
+  constructor(private storage: Storage) {
   }
 
   // CREATE
@@ -34,22 +33,6 @@ export class StorageService {
       }
     });
   }
-
-    // FIND SERVER BY ID
-    getServerById(id: number): Promise<Server> {
-        return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
-            if (!servers || servers.length === 0) {
-                return null;
-            }
-            for (const server of servers) {
-                if (server.id === id) {
-                    console.log(server);
-                    return server;
-                }
-            }
-            return null;
-        });
-    }
 
   // READ
   getServers(): Promise<Server[]> {
@@ -94,4 +77,20 @@ export class StorageService {
       return this.storage.set(SERVERS_KEY, serversToKeep);
     });
   }
+
+    // GET SERVER BY ID
+    getServerById(id: number): Promise<Server> {
+        return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
+            if (!servers || servers.length === 0) {
+                return null;
+            }
+            for (const server of servers) {
+                if (server.id === id) {
+                    console.log(server);
+                    return server;
+                }
+            }
+            return null;
+        });
+    }
 }
