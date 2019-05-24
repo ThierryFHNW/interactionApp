@@ -12,20 +12,12 @@
 
 <ion-content>
 
-  <!--<ion-card *ngIf="scannedCode">
-    <p>scannedCode: {{ scannedCode }}</p>
-  </ion-card>
-
-  <ion-card *ngIf="scannedCodeArrayMock">
-    <p>scannedCode: {{ scannedCodeArrayMock.values() }}</p>
-  </ion-card>
--->
-  <ion-item>
+  <ion-item *ngIf="mock===false">
     <p>{{newServer}}: {{newServer.projectName}} , {{newServer.pyWallServer}}, {{newServer.syncServer}}, {{newServer.sprintId}}</p>
   </ion-item>
 
-<!--  <ion-item *ngFor="let server of servers;">
-    <p>{{server.projectName}}</p>
-  </ion-item>-->
+  <ion-item *ngIf="mock===true">
+    <p>{{newServer}}: {{newServer.projectName}} , {{newServer.pyWallServer}}, {{newServer.syncServer}}, {{newServer.sprintId}}</p>
+  </ion-item>
 
 </ion-content>

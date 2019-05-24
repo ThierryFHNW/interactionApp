@@ -1,13 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {TaskService} from '../../services/task.service';
-import {SettingsService} from '../../services/settings.service';
 import {Task} from '../../models/task';
 import { Subscription, Observable } from 'rxjs/index';
-
-
-/*
-import { FormBuilder } from "@angular/forms";
-*/
+import {Server, StorageService} from '../../services/storage.service';
+import {TasksService} from '../../services/tasks.service';
 
 @Component({
     selector: 'app-tasks',
@@ -17,31 +12,29 @@ import { FormBuilder } from "@angular/forms";
 export class TasksPage implements OnInit {
     private plannedTasks: Task[] = [];
     tasks: Observable<any>;
-    taskObject: Task;
+    selectedServer: Server = <Server> {};
 
-    constructor(private settingsService: SettingsService, private taskService: TaskService) {
-        this.settingsService.getStorageVariables();
+    constructor(private storageService: StorageService, private tasksService: TasksService) {
+        this.storageService.loadSelectedServer().then(server => {
+            this.selectedServer = server;
+            console.log('ConstructorCall: ' + this.selectedServer.projectName);
+        });
     }
 
     ngOnInit() {
-        this.settingsService.getStorageVariables();
-    }
-
-    httpGetTasks(): Observable<any> {
-        return this.taskService.list(this.settingsService.projectName, this.settingsService.sprintId);
+        console.log('ngOnInitCall: ' + this.selectedServer.projectName);
     }
 
     fetchData() {
         const obj = this;
-        if (this.settingsService.getProjectName() && this.settingsService.getSprintId()) {
-           this.taskService.list(this.settingsService.getProjectName(), this.settingsService.getSprintId())
+        console.log(this.selectedServer.projectName + ' ' + this.selectedServer.sprintId)
+        if (this.selectedServer.projectName && this.selectedServer.sprintId) {
+           this.tasksService.list(this.selectedServer.projectName, this.selectedServer.sprintId)
                 .subscribe(plannedTasks => {
                     this.plannedTasks = plannedTasks;
+                    console.log("THIS.PLANNEDTASK: " + this.plannedTasks);
+                    console.log("THIS.SELECTEDSERVER: " + this.selectedServer);
                 });
         }
-    }
-
-    consoleLog() {
-        console.log("THIS.PLANNEDTASK: " + this.plannedTasks);
     }
 }

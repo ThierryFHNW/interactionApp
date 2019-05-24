@@ -24,7 +24,7 @@ export class StorageService {
 
   // SET SELECTED SERVER
   setSelectedServer(server: Server) {
-      this.storage.set(SELECTED_KEY, server).then();
+      this.storage.set(SELECTED_KEY, server);
   }
 
   // LOAD SELECTED SERVER

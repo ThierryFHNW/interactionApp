@@ -7,6 +7,7 @@ import {Setting} from '../models/setting';
     providedIn: 'root'
 })
 export class SettingsService {
+    /*
     // when it exists in localStorage it becomes that value otherwise its null which is its default value anyway
     // TODO rename to projectKey
     setting: Setting;
@@ -97,36 +98,36 @@ export class SettingsService {
         return this.syncServer;
     }
 
-    /**
+    /!**
      * components can subscribe to this observable to be notified when settings change and they need to reload data
      * @returns {Observable<void>}
-     */
+     *!/
     getUpdateObservable(): Observable<void> {
         return this.updateSubject.asObservable();
     }
 
-    /**
+    /!**
      * this function will inform all listeners to the update observable
      * and saves the settings to local storage
-     */
+     *!/
     emitSettingsUpdate(): void {
         this.updateSubject.next();
     }
 
-    /**
+    /!**
      * Sets a new projectName and persists the new setting to localstorage
-     */
+     *!/
     setProjectName(projectName: string): void {
         this.projectName = projectName;
         this.storage.set('projectName', this.projectName);
     }
 
-    /**
+    /!**
      * Sets a new sprintId and persists the new setting to localstorage
-     */
+     *!/
     setSprintId(sprintId: string): void {
         this.sprintId = sprintId;
         this.storage.set('sprintId', this.sprintId);
     }
-
+*/
 }

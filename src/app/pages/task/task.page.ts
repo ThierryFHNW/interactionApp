@@ -25,7 +25,7 @@ interface Task {
   styleUrls: ['./task.page.scss'],
 })
 export class TaskPage implements OnInit {
-  ngOnInit(): void {
+  ngOnInit() {
   }
 /*
   projects: string[];

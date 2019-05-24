@@ -13,9 +13,8 @@
 <ion-content>
   <ion-list>
     <ion-list-header>Select Server</ion-list-header>
-
     <ion-item>
-      <ion-select (ionChange)="onSelectChange($event)" [(ngModel)]="selectedServer" placeholder="{{selectedServer.projectName}}">
+      <ion-select (ionChange)="onSelectChange($event)" placeholder="{{selectedServer.projectName || 'Select Server'}}">
         <ion-select-option *ngFor="let server of servers" [value]="server">
           {{server.projectName}}</ion-select-option>
       </ion-select>
