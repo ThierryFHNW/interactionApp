@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import {Server, StorageService} from '../../services/storage.service';
 import {ToastController} from '@ionic/angular';
+import {AlertService} from '../../services/alert.service';
 
 @Component({
   selector: 'app-scanner',
@@ -20,7 +21,7 @@ export class ScannerPage implements OnInit {
 
   constructor(private barcodeScanner: BarcodeScanner,
               private toastController: ToastController,
-              private storageService: StorageService) {
+              private storageService: StorageService, private alertService: AlertService) {
   }
 
   ngOnInit() {
@@ -61,6 +62,8 @@ export class ScannerPage implements OnInit {
       });
     }
     this.storageService.setSelectedServer(this.newServer);
+    // alert(JSON.stringify(this.newServer, null, 4));
+    this.alertService.alertScan(this.newServer);
   }
 
   // READ
