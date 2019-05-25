@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 // import { ConfigLoaderService } from '../config/configloader.service';
 import {Observable} from 'rxjs';
 import {MessageService} from './message.service';
@@ -52,7 +52,6 @@ export class TasksService {
     const obj = this;
     console.log(this.selectedServer.projectName + ' ' + this.selectedServer.sprintId)
     if (this.selectedServer.projectName && this.selectedServer.sprintId) {
-      this.listNative(this.selectedServer.projectName, this.selectedServer.sprintId);
       this.list(this.selectedServer.projectName, this.selectedServer.sprintId)
           .subscribe(plannedTasks => {
             this.tasks = plannedTasks;
@@ -78,10 +77,15 @@ export class TasksService {
     return this.http.get<Task[]>(targetURL).pipe(map(tasks => this.mapJsonToTask(tasks)));
   }
 
-  create(data: Task): Observable<any> {
+  create(data: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      })
+    };
     const targetURL = this.projectBaseURL + `/plannedtasks`;
     this.messageService.sendDebug(`PlannedTaskService post called`);
-    return this.http.post<any>(targetURL, Task);
+    return this.http.post<any>(targetURL, data, httpOptions);
   }
 
   delete(id: number) {
@@ -116,24 +120,10 @@ export class TasksService {
     return tasks;
   }
 
-  listNative(projectName: string, sprintId: string) {
-    this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
-    const targetURL = this.projectBaseURL + `/plannedtasks/${projectName}/${sprintId}`;
-    this.httpNative.get(targetURL, {}, {})
-        .then(data => {
-          console.log("NATIVE CALL: ");
-          console.log(data.status);
-          console.log(data.data); // data received by server
-          console.log(data.headers);
-
-        })
-        .catch(error => {
-
-          console.log(error.status);
-          console.log(error.error); // error message as string
-          console.log(error.headers);
-
-        });
+  createNative(data: Task): Observable<any> {
+        const targetURL = this.projectBaseURL + `/plannedtasks`;
+    this.messageService.sendDebug(`PlannedTaskService post called`);
+    return this.http.post<any>(targetURL, Task);
   }
 
   getMockedTasks(): Observable<Task[]> {
