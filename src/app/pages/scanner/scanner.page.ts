@@ -16,8 +16,8 @@ export class ScannerPage implements OnInit {
   newServer: Server = <Server> {};
   scannedCode: string;
   scannedCodeArray: string[];
-  scannedCodeArrayMock = ['AWTEST', 'https://localhost:8000', 'https://localhost:9091', '285'];
-  scannedCodeArrayMock2 = ['AWTEST', 'https://fl-0-199.zhdk.cloud.switch.ch/dev-api', 'https://fl-0-199.zhdk.cloud.switch.ch/dev/sync-server/', '285'];
+  scannedCodeArrayMock = ['AWMM', 'http://localhost:8000', 'http://localhost:9091', '320'];
+  scannedCodeArrayMock2 = ['AWTEST', 'http://fl-0-199.zhdk.cloud.switch.ch/dev-api', 'http://fl-0-199.zhdk.cloud.switch.ch/dev/sync-server/', '285'];
 
   constructor(private barcodeScanner: BarcodeScanner,
               private toastController: ToastController,
@@ -62,7 +62,6 @@ export class ScannerPage implements OnInit {
       });
     }
     this.storageService.setSelectedServer(this.newServer);
-    // alert(JSON.stringify(this.newServer, null, 4));
     this.alertService.alertScan(this.newServer);
   }
 

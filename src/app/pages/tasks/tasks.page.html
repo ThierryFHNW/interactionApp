@@ -12,10 +12,25 @@
 
     <!-- Searchbar maybe ionInput is broke -->
     <ion-searchbar text-center placeholder="Task suchen" (ionInput)="searchTasks($event)"></ion-searchbar>
-    <ion-button (click)="fetchData()">fetchData</ion-button>
 
-      <!-- Get list of Tasks as List -->
-    <ion-list>
+    <!-- Get list of Tasks as Cards -->
+    <ion-card *ngFor="let task of tasksService.tasks" (click)="editTask(task)">
+        <ion-card-content>
+        <h5>{{task.summary}}</h5>
+            <p>{{task.description}}</p>
+            <p>{{task.estimate}}</p>
+        </ion-card-content>
+    </ion-card>
+
+    <!-- Button to create a new Task -->
+    <ion-fab vertical="bottom" horizontal="center">
+        <ion-fab-button (click)="addTask()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+    <!-- Get list of Tasks as List -->
+    <!--<ion-list>
         <ion-item *ngFor="let task of plannedTasks" [routerLink]="['/task', task.id]" routerDirection="forward">
             <ion-label text-center>
                 <h3>{{task.summary}}</h3>
@@ -24,20 +39,10 @@
             </ion-label>
             <ion-icon name="close-circle" slot="end" (click)="remove()"></ion-icon>
         </ion-item>
-    </ion-list>
-
-    <!-- Get list of Tasks as Cards -->
-    <ion-card *ngFor="let task of plannedTasks" [routerLink]="['/task', task.id]" routerDirection="forward">
-        <ion-card-content>
-        <h5>{{task.summary}}</h5>
-            <p>{{task.description}}</p>
-            <p>{{task.estimate}}</p>
-        </ion-card-content>
-    </ion-card>
-
+    </ion-list>-->
 
     <!-- List of Sliding Items for Delete Interaction -->
-    <ion-list>
+<!--    <ion-list>
         <ion-item-sliding *ngFor="let task of plannedTasks" [routerLink]="['/task', task.id]" routerDirection="forward">
             <ion-item>
                 <ion-label>{{task.summary}}</ion-label>
@@ -48,14 +53,7 @@
                 <ion-item-option (click)="delete(item)">delete</ion-item-option>
             </ion-item-options>
         </ion-item-sliding>
-    </ion-list>
-
-    <!-- Button to create a new Task -->
-    <ion-fab vertical="bottom" horizontal="center">
-        <ion-fab-button [routerLink]="['/task', 'new']" routerDirection="forward">
-            <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
+    </ion-list>-->
 
     <!--Modal for the tasks page to open a task-->
     <!--https://ionicframework.com/docs/v3/components/#modals-->

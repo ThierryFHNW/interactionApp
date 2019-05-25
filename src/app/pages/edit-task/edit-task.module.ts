@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
-import { TasksPage } from './tasks.page';
-import { HTTP } from '@ionic-native/http/ngx';
 
+import { IonicModule } from '@ionic/angular';
+
+import { EditTaskPage } from './edit-task.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: TasksPage
+    component: EditTaskPage
   }
 ];
 
@@ -21,7 +21,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  providers: [HTTP],
-  declarations: [TasksPage]
+  declarations: [EditTaskPage]
 })
-export class TasksPageModule {}
+export class EditTaskPageModule {}

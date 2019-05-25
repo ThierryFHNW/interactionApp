@@ -4,7 +4,7 @@ import {IonList, Platform, ToastController} from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-setting',
+  selector: 'app-edit-setting',
   templateUrl: './edit-setting.page.html',
   styleUrls: ['./edit-setting.page.scss'],
 })

@@ -98,30 +98,6 @@ export class TaskPage implements OnInit {
     }
   }
 
-  /!**
-   * Load all Sprints of a specific Project.
-   *!/
-  loadSprintsForProject(projectName: string): void {
-    this.sprintService.getSprints(projectName).subscribe(fetchedSprints => {
-      this.sprints = fetchedSprints;
-      // Reverse so we have to most recently created sprint on top
-      this.sprints.reverse();
-      // check if sprint is set in dropdown
-      if (this.selectedSprintId !== null) {
-        // add sprint when page is loaded or sprint dropdown changed
-        this.sprintService.getSprintById(this.selectedSprintId).subscribe(existSprint => {
-          if (existSprint === null) {
-            this.selectedSprint = this.sprints.find(x => x.id === this.selectedSprintId);
-            this.selectedSprint.projectId = this.projectId;
-            // save sprint in database if not contain, sprint id is unique
-            this.sprintService.addSprint(this.selectedSprint).subscribe(sprint => {
-            });
-          }
-        });
-      }
-    });
-  }
-
   createTask() {
     this.task.projectKey = this.selectedProjectKey;
     this.task.sprintId = this.selectedSprintId.toString();

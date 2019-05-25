@@ -4,7 +4,7 @@ import {IonList, Platform, ToastController} from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-setting',
+  selector: 'app-create-setting',
   templateUrl: './create-setting.page.html',
   styleUrls: ['./create-setting.page.scss'],
 })
@@ -13,9 +13,6 @@ import { ActivatedRoute } from '@angular/router';
 export class CreateSettingPage implements OnInit {
   servers: Server[] = [];
   newServer: Server = <Server> {};
-  serverId: string;
-
-  @ViewChild('mylist')mylist: IonList;
 
   constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
     this.plt.ready().then(() => {
@@ -24,13 +21,11 @@ export class CreateSettingPage implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.serverId = id;
   }
 
 
   // CREATE
-  addServer() {
+  createServer() {
     this.newServer.modified = Date.now();
     this.newServer.id = Date.now();
 

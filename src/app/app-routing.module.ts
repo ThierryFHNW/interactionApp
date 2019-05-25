@@ -11,8 +11,8 @@ const routes: Routes = [
   { path: 'setting/:id', loadChildren: './pages/setting/setting.module#SettingPageModule' },
   { path: 'create-setting', loadChildren: './pages/create-setting/create-setting.module#CreateSettingPageModule' },
   { path: 'edit-setting/:id', loadChildren: './pages/edit-setting/edit-setting.module#EditSettingPageModule' },
-
-
+  { path: 'edit-task/:id', loadChildren: './pages/edit-task/edit-task.module#EditTaskPageModule' },
+  { path: 'create-task', loadChildren: './pages/create-task/create-task.module#CreateTaskPageModule' },
 ];
 
 @NgModule({

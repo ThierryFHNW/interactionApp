@@ -6,7 +6,6 @@ import {Issue} from './issue';
 
 export class Task implements Issue {
 
-
     public id: number;
     public summary: string;
     public description: string;

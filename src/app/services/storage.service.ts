@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import {forEach} from '@angular-devkit/schematics';
 
 export interface Server {
   id: number;
@@ -11,8 +10,18 @@ export interface Server {
   modified: number;
 }
 
+export interface PlannedTask {
+  id: number;
+  projectId: string;
+  sprintId: string;
+  summary: string;
+  description: string;
+}
+
 const SERVERS_KEY = 'my_servers';
 const SELECTED_KEY = 'selectedServer';
+const SELECTED_TASK = 'selectedTask';
+
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +29,16 @@ const SELECTED_KEY = 'selectedServer';
 export class StorageService {
 
   constructor(private storage: Storage) {
+  }
+
+  // SET SELECTED TASK
+  setSelectedTask(task: PlannedTask) {
+    this.storage.set(SELECTED_TASK, task);
+  }
+
+  // LOAD SELECTED TASK
+  loadSelectedTask(): Promise<PlannedTask> {
+    return this.storage.get(SELECTED_TASK);
   }
 
   // SET SELECTED SERVER

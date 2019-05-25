@@ -1,29 +1,27 @@
 import { Injectable } from '@angular/core';
 import {AlertController} from '@ionic/angular';
 import {Server} from './storage.service';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
-  constructor(private alertController: AlertController) { }
+  objectString: string;
+  constructor(private alertController: AlertController, private router: Router) { }
 
   async alertScan(server: Server) {
+    this.objectString = JSON.stringify(server, null, 4).replace(/[{}"]/g, '');
     const alert = await this.alertController.create({
       header: 'Server Added!',
-      message: JSON.stringify(server, null, 4),
+      message: this.objectString,
       buttons: [
         {
-          text: 'Cancel',
-          role: 'cancel',
+          text: 'OK',
           cssClass: 'secondary',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
           handler: () => {
-            console.log('Confirm Okay');
+            console.log('Navigate Home');
+            this.router.navigate(['home']);
           }
         }
       ]

@@ -6,6 +6,7 @@ import {MessageService} from './message.service';
 import {Task} from '../models/task';
 import {map} from 'rxjs/operators';
 import {Server, StorageService} from './storage.service';
+import {HTTP} from '@ionic-native/http/ngx';
 
 export interface PlannedTask {
   id: number;
@@ -14,6 +15,8 @@ export interface PlannedTask {
   summary: string;
   description: string;
 }
+
+const EDIT_TASK = 'editTask';
 
 @Injectable({
   providedIn: 'root'
@@ -27,15 +30,42 @@ export class TasksService {
   private mockedURL = '/assets/data/tasks.json';
   private selectedServer: Server = <Server> {};
   private projectBaseURL: string;
+  public tasks: Task[] = [];
 
-  constructor(private http: HttpClient,
+  constructor(private httpNative: HTTP, private http: HttpClient,
               private storageService: StorageService,
               private messageService: MessageService) {
+    this.loadSelectedServer();
+  }
+
+  // Maybe outsource Method and variables to StorageService
+  loadSelectedServer() {
     this.storageService.loadSelectedServer().then(server => {
       this.selectedServer = server;
-      console.log(this.selectedServer.projectName);
       this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
+      console.log('Selected Server Projectname: ' + this.selectedServer.projectName);
       console.log('this.projectBaseURL 1: ' + this.projectBaseURL);
+    });
+  }
+
+  fetchTasks() {
+    const obj = this;
+    console.log(this.selectedServer.projectName + ' ' + this.selectedServer.sprintId)
+    if (this.selectedServer.projectName && this.selectedServer.sprintId) {
+      this.listNative(this.selectedServer.projectName, this.selectedServer.sprintId);
+      this.list(this.selectedServer.projectName, this.selectedServer.sprintId)
+          .subscribe(plannedTasks => {
+            this.tasks = plannedTasks;
+            console.log("THIS.PLANNEDTASK: " + JSON.stringify(this.tasks));
+            console.log("THIS.SELECTEDSERVER: " + JSON.stringify(this.selectedServer));
+          });
+    }
+  }
+
+  // GET TASK BY ID -- Maybe return a Promise
+  getTaskById(id: number): Promise<Task> {
+    return new Promise<Task>((resolve, reject) => {
+      resolve( this.tasks.find(task => task.id === id) );
     });
   }
 
@@ -48,7 +78,7 @@ export class TasksService {
     return this.http.get<Task[]>(targetURL).pipe(map(tasks => this.mapJsonToTask(tasks)));
   }
 
-  create(data: Task) {
+  create(data: Task): Observable<any> {
     const targetURL = this.projectBaseURL + `/plannedtasks`;
     this.messageService.sendDebug(`PlannedTaskService post called`);
     return this.http.post<any>(targetURL, Task);
@@ -84,6 +114,26 @@ export class TasksService {
       tasks.push(task);
     }
     return tasks;
+  }
+
+  listNative(projectName: string, sprintId: string) {
+    this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
+    const targetURL = this.projectBaseURL + `/plannedtasks/${projectName}/${sprintId}`;
+    this.httpNative.get(targetURL, {}, {})
+        .then(data => {
+          console.log("NATIVE CALL: ");
+          console.log(data.status);
+          console.log(data.data); // data received by server
+          console.log(data.headers);
+
+        })
+        .catch(error => {
+
+          console.log(error.status);
+          console.log(error.error); // error message as string
+          console.log(error.headers);
+
+        });
   }
 
   getMockedTasks(): Observable<Task[]> {

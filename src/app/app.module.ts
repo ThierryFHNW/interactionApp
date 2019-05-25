@@ -15,6 +15,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HTTP } from '@ionic-native/http/ngx';
 
 const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
 
@@ -38,8 +39,9 @@ const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
       StatusBar,
       SplashScreen,
       { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-      SyncService
-  ],
+      SyncService,
+      HTTP
+],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
