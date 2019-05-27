@@ -22,20 +22,13 @@
     <ion-searchbar text-center placeholder="Task suchen" (ionInput)="searchTasks($event)"></ion-searchbar>
 
     <!-- Get list of Tasks as Cards -->
-    <ion-card *ngFor="let task of tasksService.tasksNewestFirst" (click)="editTask(task)">
+    <ion-card *ngFor="let task of tasksNewestFirst" (click)="editTask(task)">
         <ion-card-content>
             <h5>{{task.summary}}</h5>
             <p>{{task.description}}</p>
             <p>{{task.estimate}}</p>
         </ion-card-content>
     </ion-card>
-
-    <!-- Button to create a new Task -->
-    <ion-fab vertical="bottom" horizontal="center">
-        <ion-fab-button (click)="addTask()">
-            <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
 
     <!-- Get list of Tasks as List -->
     <!--<ion-list>
@@ -67,3 +60,13 @@
     <!--https://ionicframework.com/docs/v3/components/#modals-->
 
 </ion-content>
+
+<!-- Button to create a new Task -->
+<ion-footer>
+    <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+        <ion-fab-button (click)="addTask()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-footer>
+

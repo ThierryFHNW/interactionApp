@@ -11,17 +11,14 @@ import {TasksService} from '../../services/tasks.service';
   styleUrls: ['./edit-task.page.scss'],
 })
 
-export class EditTaskPage implements OnInit {
+export class EditTaskPage {
   public tasks: Task[] = [];
   editTask: Task = <Task> {};
 
   constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private tasksService: TasksService, private plt: Platform, private toastController: ToastController) {
-    this.plt.ready().then(() => {
-      this.getTaskByUrlParam();
-    });
   }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.getTaskByUrlParam();
   }
 

@@ -9,17 +9,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./edit-setting.page.scss'],
 })
 
-export class EditSettingPage implements OnInit {
+export class EditSettingPage {
   servers: Server[] = [];
   editServer: Server = <Server> {};
 
   constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
-    this.plt.ready().then(() => {
-      this.loadServers();
-    });
   }
 
-  ngOnInit() {
+  ionViewWillEnter() {
+    this.loadServers();
     this.getServerByUrlParam();
   }
 

@@ -30,8 +30,6 @@ export class TasksService {
   private mockedURL = '/assets/data/tasks.json';
   private selectedServer: Server = <Server> {};
   private projectBaseURL: string;
-  public tasks: Task[] = [];
-  public tasksNewestFirst: Task[] = [];
 
   constructor(private httpNative: HTTP, private http: HttpClient,
               private storageService: StorageService,
@@ -63,34 +61,17 @@ export class TasksService {
     });
   }
 
-  fetchTasks() {
-    const obj = this;
-    console.log(this.selectedServer.projectName + ' ' + this.selectedServer.sprintId)
-    if (this.selectedServer.projectName && this.selectedServer.sprintId) {
-      this.tasks = [];
-      this.list(this.selectedServer.projectName, this.selectedServer.sprintId)
-          .subscribe(plannedTasks => {
-            this.tasks = plannedTasks;
-            this.tasksNewestFirst = this.tasks.reverse();
-            console.log("THIS.PLANNEDTASK: " + JSON.stringify(this.tasks));
-            console.log("THIS.SELECTEDSERVER: " + JSON.stringify(this.selectedServer));
-          });
-    }
-  }
-
   // GET TASK BY ID -- Maybe return a Promise
-  getTaskById(id: number): Promise<Task> {
+/*  getTaskById(id: number): Promise<Task> {
     return new Promise<Task>((resolve, reject) => {
       resolve( this.tasks.find(task => task.id === id) );
     });
-  }
+  }*/
 
   list(projectName: string, sprintId: string): Observable<any> {
     this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
     console.log('this.projectBaseURL 2: ' + this.projectBaseURL);
     const targetURL = this.projectBaseURL + `/plannedtasks/${projectName}/${sprintId}`;
-    console.log('targetURL: ' + targetURL);
-    this.messageService.sendDebug(`PlannedTaskService get called on project ${projectName} and sprint ${sprintId}`);
     return this.http.get<Task[]>(targetURL).pipe(map(tasks => this.mapJsonToTask(tasks)));
   }
 
@@ -137,11 +118,10 @@ export class TasksService {
     return tasks;
   }
 
-  createNative(data: Task): Observable<any> {
+/*  createNative(data: Task): Observable<any> {
         const targetURL = this.projectBaseURL + `/plannedtasks`;
-    this.messageService.sendDebug(`PlannedTaskService post called`);
     return this.http.post<any>(targetURL, Task);
-  }
+  }*/
 
   getMockedTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(this.mockedURL);

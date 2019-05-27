@@ -15,15 +15,14 @@ import {Sprint} from "../../models/sprint";
 export class TasksPage {
     selectedServer: Server = <Server>{};
     sprints: Sprint[] = [];
+    tasks: Task[] = [];
+    tasksNewestFirst: Task[] = [];
 
     constructor(private router: Router, private alertService: AlertService, private toastController: ToastController, private storageService: StorageService, private plt: Platform, private tasksService: TasksService) {
-        this.plt.ready().then(() => {
-            this.ionViewWillEnter();
-        });
     }
 
     ionViewWillEnter() {
-        this.loadSelectedServer();
+        this.getSelectedServer();
     }
 
     // KEEP SELECTED SERVER WHEN LEAVING THE PAGE
@@ -32,18 +31,26 @@ export class TasksPage {
         this.storageService.setSelectedServerSprintId(this.selectedServer.sprintId);
     }
 
-    loadSelectedServer() {
+    getSelectedServer() {
         this.storageService.getSelectedServer().then(server => {
             if (server) {
-                console.log("Server" + server);
+                console.log("Server" + JSON.stringify(server));
                 this.selectedServer = server;
                 if (!this.selectedServer.sprintId && this.selectedServer.projectName) {
                     this.tasksService.getSprints(this.selectedServer.projectName).subscribe(sprints => {
                         this.sprints = sprints;
-                        // this.alertService.alertSelectedServerHasNoSprint(sprints);
+                        this.tasksService.list(this.selectedServer.projectName, this.selectedServer.sprintId).subscribe(plannedTasks => {
+                            console.log("IF PlannedTasks are: " + plannedTasks);
+                            this.tasks = plannedTasks;
+                            this.tasksNewestFirst = this.tasks.reverse();
+                        });
                     });
-                } else {
-                    this.tasksService.fetchTasks();
+                } else if (this.selectedServer.projectName) {
+                    this.tasksService.list(this.selectedServer.projectName, this.selectedServer.sprintId).subscribe(plannedTasks => {
+                        console.log("ELSE PlannedTasks are: " + plannedTasks);
+                        this.tasks = plannedTasks;
+                        this.tasksNewestFirst = this.tasks.reverse();
+                    });
                 }
             }
             console.log('ConstructorCall: ' + this.selectedServer.projectName);

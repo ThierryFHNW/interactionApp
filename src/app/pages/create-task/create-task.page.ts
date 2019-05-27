@@ -11,7 +11,7 @@ import {Server, StorageService} from '../../services/storage.service';
     styleUrls: ['./create-task.page.scss'],
 })
 
-export class CreateTaskPage implements OnInit {
+export class CreateTaskPage {
     newTask: Task = {} as Task;
     data: any = {} as any;
     selectedServer: Server = {} as Server;
@@ -20,12 +20,9 @@ export class CreateTaskPage implements OnInit {
     @ViewChild('mylist') mylist: IonList;
 
     constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private tasksService: TasksService, private plt: Platform, private toastController: ToastController) {
-        this.plt.ready().then(() => {
-            this.loadTasks();
-        });
     }
 
-    ngOnInit() {
+    ionViewWillEnter() {
         this.getSelectedServer();
     }
 
@@ -50,15 +47,7 @@ export class CreateTaskPage implements OnInit {
             const newPlannedTask = new Task(res.id, res.summary, res.description, null, null, null, null, null, null, null, null, null);
             this.plannedTasks.push(newPlannedTask);
             this.showToast('Task added!');
-            this.loadTasks(); // Or add it to the array directly
         });
-    }
-
-    // READ
-    loadTasks() {
-        /*        this.tasksService.getTasks().then(tasks => {
-                    this.tasks = tasks;
-                });*/
     }
 
     // Helper

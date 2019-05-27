@@ -18,8 +18,8 @@ export interface PlannedTask {
  description: string;
 }
 
-const SERVERS_KEY = 'my_servers';
-const SELECTED_KEY = 'selectedServer';
+const SERVERS = 'my_servers';
+const SELECTED_SERVER = 'selectedServer';
 const SELECTED_TASK = 'selectedTask';
 
 
@@ -43,20 +43,20 @@ export class StorageService {
 
  // SET SELECTED SERVER
  setSelectedServer(server: Server): Promise<Server> {
-   return this.storage.set(SELECTED_KEY, server);
+   return this.storage.set(SELECTED_SERVER, server);
  }
 
  // LOAD SELECTED SERVER
  getSelectedServer(): Promise<Server> {
-  return this.storage.get(SELECTED_KEY);
+  return this.storage.get(SELECTED_SERVER);
  }
 
  // SET SELECTED SERVER SPRINT ID
  setSelectedServerSprintId(sprintId: string) {
   this.getSelectedServer().then(server => {
    server.sprintId = sprintId;
-   console.log("SERVER IS: " + server);
-   this.storage.set(SELECTED_KEY, server).then(
+   console.log("SERVER IS: " + JSON.stringify(server));
+   this.storage.set(SELECTED_SERVER, server).then(
        this.getSelectedServer
    );
   });
@@ -65,24 +65,24 @@ export class StorageService {
 
  // CREATE
  addServer(server: Server): Promise<any> {
-  return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
+  return this.storage.get(SERVERS).then((servers: Server[]) => {
    if (servers) {
     servers.push(server);
-    return this.storage.set(SERVERS_KEY, servers);
+    return this.storage.set(SERVERS, servers);
    } else {
-    return this.storage.set(SERVERS_KEY, [server]);
+    return this.storage.set(SERVERS, [server]);
    }
   });
  }
 
  // READ
  getServers(): Promise<Server[]> {
-  return this.storage.get(SERVERS_KEY);
+  return this.storage.get(SERVERS);
  }
 
  // UPDATE
  updateServer(server: Server): Promise<any> {
-  return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
+  return this.storage.get(SERVERS).then((servers: Server[]) => {
    if (!servers || servers.length === 0) {
     return null;
    }
@@ -97,13 +97,13 @@ export class StorageService {
     }
    }
 
-   return this.storage.set(SERVERS_KEY, newServers);
+   return this.storage.set(SERVERS, newServers);
   });
  }
 
  // DELETE
  deleteServer(id: number): Promise<Server> {
-  return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
+  return this.storage.get(SERVERS).then((servers: Server[]) => {
    if (!servers || servers.length === 0) {
     return null;
    }
@@ -115,13 +115,13 @@ export class StorageService {
      serversToKeep.push(i);
     }
    }
-   return this.storage.set(SERVERS_KEY, serversToKeep);
+   return this.storage.set(SERVERS, serversToKeep);
   });
  }
 
  // GET SERVER BY ID
  getServerById(id: number): Promise<Server> {
-  return this.storage.get(SERVERS_KEY).then((servers: Server[]) => {
+  return this.storage.get(SERVERS).then((servers: Server[]) => {
    if (!servers || servers.length === 0) {
     return null;
    }

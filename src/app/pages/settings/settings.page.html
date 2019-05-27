@@ -12,10 +12,10 @@
 
 <ion-content>
   <ion-list>
-    <ion-list-header>Select Server</ion-list-header>
+    <ion-list-header>SELECT SERVER</ion-list-header>
     <ion-item>
       <ion-select (ionChange)="onSelectChange($event)" placeholder="{{selectedServer.projectName || 'Select Server'}}">
-        <ion-select-option *ngFor="let server of servers" [value]="server">
+        <ion-select-option *ngFor="let server of serversNewestFirst" [value]="server">
           {{server.projectName}}</ion-select-option>
       </ion-select>
     </ion-item>
@@ -24,7 +24,7 @@
   <ion-list #mylist>
 
     <ion-list-header>
-      <ion-label>My Servers</ion-label>
+      <ion-label>MY SERVERS</ion-label>
     </ion-list-header>
 
     <ion-item-sliding *ngFor="let server of servers">
@@ -47,12 +47,13 @@
     </ion-item-sliding>
 
   </ion-list>
+</ion-content>
 
-  <!-- Button to create a new Task -->
-  <ion-fab vertical="bottom" horizontal="center">
+<!-- Button to create a new Task -->
+<ion-footer>
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button (click)="addServer()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-</ion-content>
+</ion-footer>
