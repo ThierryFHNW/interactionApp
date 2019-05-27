@@ -12,19 +12,18 @@ import {Sprint} from "../../models/sprint";
     templateUrl: './tasks.page.html',
     styleUrls: ['./tasks.page.scss'],
 })
-export class TasksPage implements OnInit {
+export class TasksPage {
     selectedServer: Server = <Server>{};
     sprints: Sprint[] = [];
 
     constructor(private router: Router, private alertService: AlertService, private toastController: ToastController, private storageService: StorageService, private plt: Platform, private tasksService: TasksService) {
         this.plt.ready().then(() => {
-            this.loadSelectedServer();
+            this.ionViewWillEnter();
         });
     }
 
-    ngOnInit() {
+    ionViewWillEnter() {
         this.loadSelectedServer();
-        console.log('ngOnInitCall: ' + this.selectedServer.projectName);
     }
 
     // KEEP SELECTED SERVER WHEN LEAVING THE PAGE
@@ -34,15 +33,15 @@ export class TasksPage implements OnInit {
     }
 
     loadSelectedServer() {
-        this.storageService.loadSelectedServer().then(server => {
+        this.storageService.getSelectedServer().then(server => {
             if (server) {
                 console.log("Server" + server);
                 this.selectedServer = server;
                 if (!this.selectedServer.sprintId && this.selectedServer.projectName) {
-                        this.tasksService.getSprints(this.selectedServer.projectName).subscribe(sprints => {
-                            this.sprints = sprints;
-                            // this.alertService.alertSelectedServerHasNoSprint(sprints);
-                        });
+                    this.tasksService.getSprints(this.selectedServer.projectName).subscribe(sprints => {
+                        this.sprints = sprints;
+                        // this.alertService.alertSelectedServerHasNoSprint(sprints);
+                    });
                 } else {
                     this.tasksService.fetchTasks();
                 }
@@ -51,39 +50,15 @@ export class TasksPage implements OnInit {
         });
     }
 
-    // NAVIGATE TO EDIT SITE
+    // NAVIGATE TO EDIT TASK SITE
     editTask(task: Task) {
         this.router.navigate(['/edit-task', task.id ]);
     }
 
-    // NAVIGATE TO CREATE SITE
+    // NAVIGATE TO CREATE TASK SITE
     addTask() {
         this.router.navigate(['create-task']);
     }
-
-    /**
-    * Load all Sprints of a specific Project.
-    */
-/*    loadSprintsForProject(projectName: string): void {
-        this.sprintService.getSprints(projectName).subscribe(fetchedSprints => {
-            this.sprints = fetchedSprints;
-            // Reverse so we have to most recently created sprint on top
-            this.sprints.reverse();
-            // check if sprint is set in dropdown
-            if (this.selectedSprintId !== null) {
-                // add sprint when page is loaded or sprint dropdown changed
-                this.sprintService.getSprintById(this.selectedSprintId).subscribe(existSprint => {
-                    if (existSprint === null) {
-                        this.selectedSprint = this.sprints.find(x => x.id === this.selectedSprintId);
-                        this.selectedSprint.projectId = this.projectId;
-                        // save sprint in database if not contain, sprint id is unique
-                        this.sprintService.addSprint(this.selectedSprint).subscribe(sprint => {
-                        });
-                    }
-                });
-            }
-        });
-    }*/
 
     // Helper
     async showToast(msg) {

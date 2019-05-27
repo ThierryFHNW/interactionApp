@@ -32,7 +32,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
       FormsModule,
       IonicStorageModule.forRoot({
           name: '__mydb',
-          driverOrder: ['indexeddb', 'sqlite', 'localstorage']
+          driverOrder: ['localstorage', 'indexeddb', 'sqlite' ]
       })
   ],
   providers: [

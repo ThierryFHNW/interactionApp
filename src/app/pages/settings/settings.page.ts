@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
     styleUrls: ['./settings.page.scss'],
 })
 // this is the controller now, no function in brackets
-export class SettingsPage implements OnInit {
+export class SettingsPage {
     servers: Server[] = [];
     newServer: Server = <Server> {};
     selectedServer: Server = <Server> {};
@@ -19,12 +19,13 @@ export class SettingsPage implements OnInit {
 
     constructor(private router: Router, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
         this.plt.ready().then(() => {
-            this.loadServers();
+            this.ionViewWillEnter();
         });
     }
 
-    ngOnInit(): void {
+    ionViewWillEnter() {
         this.mylist.closeSlidingItems();
+        this.loadServers();
         this.onSelectLoad();
     }
 
@@ -37,9 +38,12 @@ export class SettingsPage implements OnInit {
 
     // KEEP SELECTED SERVER WHEN LEAVING THE PAGE
     onSelectChange(selectedValue: any) {
-        this.storageService.setSelectedServer(selectedValue.detail.value);
-        this.selectedServer = selectedValue.detail.value;
-        console.log('Set the selectedServer: ' + this.selectedServer + this.selectedServer.projectName);
+        this.selectedServer = <Server> {};
+        this.storageService.setSelectedServer(selectedValue.detail.value).then(selectedServer => {
+            this.selectedServer = selectedValue.detail.value;
+            console.log('Set the selectedServer: ' + this.selectedServer);
+            this.loadServers();
+        });
     }
 
     // LOAD SELECTED SERVER
@@ -55,6 +59,7 @@ export class SettingsPage implements OnInit {
     editServer(server: Server) {
         this.mylist.closeSlidingItems();
         this.router.navigate(['/edit-setting', server.id ]);
+        // ngDestroy Somehow...();
     }
 
     // NAVIGATE TO CREATE SITE

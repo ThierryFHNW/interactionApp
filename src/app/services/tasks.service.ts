@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-// import { ConfigLoaderService } from '../config/configloader.service';
 import {Observable} from 'rxjs';
 import {MessageService} from './message.service';
 import {Task} from '../models/task';
@@ -33,7 +32,6 @@ export class TasksService {
   private projectBaseURL: string;
   public tasks: Task[] = [];
   public tasksNewestFirst: Task[] = [];
-  private sprints: Sprint[] = [];
 
   constructor(private httpNative: HTTP, private http: HttpClient,
               private storageService: StorageService,
@@ -47,9 +45,7 @@ export class TasksService {
    * @returns {Observable<Sprint[]>}
    */
   getSprints(projectName: string): Observable<Sprint[]> {
-    console.log('GET SPRINTS: this.projectBaseURL: ' + this.projectBaseURL);
     const targetURL = this.projectBaseURL + `/${projectName}/sprints`;
-    console.log('targetURL: ' + targetURL);
     return this.http.get<Sprint[]>(targetURL).pipe(map(res => {
         return res;
       }));
@@ -57,10 +53,10 @@ export class TasksService {
 
   // Maybe outsource Method and variables to StorageService
   getSelectedServer() {
+    this.selectedServer = <Server> {};
     this.storageService.getSelectedServer().then(server => {
       this.selectedServer = server;
       this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
-      console.log('Selected Server: ' + this.selectedServer.projectName);
       /*if (!this.selectedServer.sprintId) {
         this.getSprints(this.selectedServer.projectName);
       }*/
