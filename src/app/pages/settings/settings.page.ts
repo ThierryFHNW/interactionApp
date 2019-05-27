@@ -1,7 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Platform, ToastController, IonList} from '@ionic/angular';
+import {Platform, IonList} from '@ionic/angular';
 import {Server, StorageService} from '../../services/storage.service';
 import {Router} from '@angular/router';
+import {Task} from "../../models/task";
+import {ToastService} from "../../services/toast.service";
+import {AlertService} from "../../services/alert.service";
+import {validate} from "codelyzer/walkerFactory/walkerFn";
 
 @Component({
     selector: 'app-settings',
@@ -12,13 +16,17 @@ import {Router} from '@angular/router';
 export class SettingsPage {
     servers: Server[] = [];
     serversNewestFirst: Server[] = [];
-    newServer: Server = <Server>{};
     selectedServer: Server = <Server>{};
+    emptyTasks: Task[] = [];
 
     // USE DOM ELEMENT TO
     @ViewChild('mylist') mylist: IonList;
 
-    constructor(private router: Router, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
+    constructor(private toastService: ToastService,
+                private router: Router,
+                private storageService: StorageService,
+                private plt: Platform,
+                private alertService: AlertService) {
     }
 
     ionViewWillEnter() {
@@ -42,9 +50,13 @@ export class SettingsPage {
         this.selectedServer = <Server>{};
         this.storageService.setSelectedServer(selectedValue.detail.value).then(selectedServer => {
             this.selectedServer = selectedValue.detail.value;
-            console.log('Set the selectedServer: ' + this.selectedServer);
+            console.log('Set the selectedServer: ' + JSON.stringify(this.selectedServer));
+            this.toastService.showToast(this.selectedServer.projectName + ' selected!');
             this.loadServers();
         });
+
+        // RESET TASKS WHEN SELECTION IS CHANGED
+        this.storageService.setTasks([]);
     }
 
     // LOAD SELECTED SERVER
@@ -69,21 +81,12 @@ export class SettingsPage {
         this.router.navigate(['create-setting']);
     }
 
-    // DELETE
+    // DELETE SERVER - COULD BE REWRITTEN WITH ALERTSERVICE
     deleteServer(server: Server) {
         this.storageService.deleteServer(server.id).then(() => {
-            this.showToast('Server removed!');
+            this.toastService.showToast('Server removed!');
             this.mylist.closeSlidingItems(); // Fix or sliding is stuck afterwards
             this.loadServers(); // Or splice it from the array directly
         });
-    }
-
-    // Helper
-    async showToast(msg) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: 2000
-        });
-        toast.present();
     }
 }

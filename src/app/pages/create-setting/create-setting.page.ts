@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {Server, StorageService} from '../../services/storage.service';
-import {IonList, Platform, ToastController} from '@ionic/angular';
+import {IonList, Platform, } from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
+import {ToastService} from "../../services/toast.service";
 
 @Component({
     selector: 'app-create-setting',
@@ -17,7 +18,10 @@ export class CreateSettingPage {
     servers: Server[] = [];
     newServer: Server = <Server>{};
 
-    constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
+    constructor(private activatedRoute: ActivatedRoute,
+                private toastService: ToastService,
+                private storageService: StorageService,
+                private plt: Platform) {
     }
 
     ionViewWillEnter() {
@@ -32,24 +36,15 @@ export class CreateSettingPage {
 
         this.storageService.addServer(this.newServer).then(server => {
             this.newServer = <Server>{};
-            this.showToast('Server added!')
+            this.toastService.showToast('Server added!')
             this.loadServers(); // Or add it to the array directly
         });
     }
 
-    // READ
+    // GET SERVERS
     loadServers() {
         this.storageService.getServers().then(servers => {
             this.servers = servers;
         });
-    }
-
-    // Helper
-    async showToast(msg) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: 2000
-        });
-        toast.present();
     }
 }

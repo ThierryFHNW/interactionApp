@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-fab horizontal="end">
-        <ion-button>
+        <ion-button (click)="deleteTask(editTask.id)">
           <ion-icon name="trash"></ion-icon>
         </ion-button>
       </ion-fab>
@@ -15,11 +15,6 @@
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-label position="floating">ID</ion-label>
-    <ion-input readonly [(ngModel)]="editTask.id"></ion-input>
-  </ion-item>
-
   <ion-item>
     <ion-label position="floating">Name</ion-label>
     <ion-input [(ngModel)]="editTask.summary"></ion-input>

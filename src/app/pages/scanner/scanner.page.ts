@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {BarcodeScanner} from '@ionic-native/barcode-scanner/ngx';
 import {Server, StorageService} from '../../services/storage.service';
-import {Platform, ToastController} from '@ionic/angular';
+import {Platform} from '@ionic/angular';
 import {AlertService} from '../../services/alert.service';
+import {ToastService} from '../../services/toast.service';
 
 @Component({
     selector: 'app-scanner',
@@ -12,7 +13,7 @@ import {AlertService} from '../../services/alert.service';
 
 // TODO: 1. If two settings are exactly the same overwrite the other setting
 export class ScannerPage {
-    mock = true;
+    mock = false;
     servers: Server[] = [];
     newServer: Server = <Server>{};
     scannedCode: string;
@@ -21,8 +22,10 @@ export class ScannerPage {
     scannedCodeArrayMock2 = ['AWTEST', 'http://fl-0-199.zhdk.cloud.switch.ch/dev-api', 'http://fl-0-199.zhdk.cloud.switch.ch/dev/sync-server/', '285'];
 
     constructor(private barcodeScanner: BarcodeScanner,
-                private toastController: ToastController,
-                private storageService: StorageService, private alertService: AlertService, private plt: Platform) {
+                private toastService: ToastService,
+                private storageService: StorageService,
+                private alertService: AlertService,
+                private plt: Platform) {
     }
 
     ionViewWillEnter() {
@@ -58,7 +61,7 @@ export class ScannerPage {
             this.newServer.id = Date.now();
 
             this.storageService.addServer(this.newServer).then(server => {
-                this.showToast('Server added!')
+                this.toastService.showToast('Server added!');
                 this.loadServers(); // Or add it to the array directly
             });
         }
@@ -71,14 +74,5 @@ export class ScannerPage {
         this.storageService.getServers().then(servers => {
             this.servers = servers;
         });
-    }
-
-    // Helper
-    async showToast(msg) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: 2000
-        });
-        toast.present();
     }
 }

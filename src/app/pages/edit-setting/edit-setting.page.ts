@@ -1,7 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Server, StorageService} from '../../services/storage.service';
-import {IonList, Platform, ToastController} from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import {IonList, Platform} from '@ionic/angular';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ToastService} from "../../services/toast.service";
+import {AlertService} from "../../services/alert.service";
 
 @Component({
   selector: 'app-edit-setting',
@@ -13,7 +15,12 @@ export class EditSettingPage {
   servers: Server[] = [];
   editServer: Server = <Server> {};
 
-  constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private plt: Platform, private toastController: ToastController) {
+  constructor(private alertService: AlertService,
+              private activatedRoute: ActivatedRoute,
+              private toastService: ToastService,
+              private storageService: StorageService,
+              private plt: Platform,
+              private router: Router) {
   }
 
   ionViewWillEnter() {
@@ -26,11 +33,6 @@ export class EditSettingPage {
     const id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
     this.storageService.getServerById(id).then(server => {
       this.editServer = server;
-      console.log('editServerID: ' + this.editServer.id);
-      console.log('editServerID: ' + this.editServer.projectName);
-      console.log('editServerID: ' + this.editServer.pyWallServer);
-      console.log('editServerID: ' + this.editServer.syncServer);
-      // this.storageService.updateServer(server).then(server )
     });
   }
 
@@ -38,10 +40,17 @@ export class EditSettingPage {
   updateServer() {
     this.editServer.modified = Date.now();
 
-    this.storageService.updateServer(this.editServer).then(server => {
-      this.showToast('Server updated!');
+    this.storageService.updateServer(this.editServer).then(servers => {
+      console.log(servers);
+      console.log(this.editServer);
+      this.toastService.showToast('Server updated!');
       this.loadServers(); // Or update it inside the array directly
     });
+  }
+
+  // DELETE
+  deleteServer(id: number) {
+    this.alertService.alertDeleteSetting(id);
   }
 
   // READ
@@ -49,14 +58,5 @@ export class EditSettingPage {
     this.storageService.getServers().then(servers => {
       this.servers = servers;
     });
-  }
-
-  // Helper
-  async showToast(msg) {
-    const toast = await this.toastController.create({
-      message: msg,
-      duration: 2000
-    });
-    toast.present();
   }
 }

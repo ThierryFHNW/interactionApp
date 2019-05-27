@@ -34,7 +34,7 @@ export class TasksService {
   constructor(private httpNative: HTTP, private http: HttpClient,
               private storageService: StorageService,
               private messageService: MessageService) {
-    this.getSelectedServer();
+      this.getSelectedServerAndURL();
   }
 
   /**
@@ -45,33 +45,24 @@ export class TasksService {
   getSprints(projectName: string): Observable<Sprint[]> {
     const targetURL = this.projectBaseURL + `/${projectName}/sprints`;
     return this.http.get<Sprint[]>(targetURL).pipe(map(res => {
+        console.log(res);
         return res;
       }));
   }
 
-  // Maybe outsource Method and variables to StorageService
-  getSelectedServer() {
+  getSelectedServerAndURL() {
     this.selectedServer = <Server> {};
     this.storageService.getSelectedServer().then(server => {
       this.selectedServer = server;
       this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
-      /*if (!this.selectedServer.sprintId) {
-        this.getSprints(this.selectedServer.projectName);
-      }*/
     });
   }
-
-  // GET TASK BY ID -- Maybe return a Promise
-/*  getTaskById(id: number): Promise<Task> {
-    return new Promise<Task>((resolve, reject) => {
-      resolve( this.tasks.find(task => task.id === id) );
-    });
-  }*/
 
   list(projectName: string, sprintId: string): Observable<any> {
     this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
     console.log('this.projectBaseURL 2: ' + this.projectBaseURL);
     const targetURL = this.projectBaseURL + `/plannedtasks/${projectName}/${sprintId}`;
+    console.log('targetURL: ' + targetURL);
     return this.http.get<Task[]>(targetURL).pipe(map(tasks => this.mapJsonToTask(tasks)));
   }
 
@@ -86,10 +77,10 @@ export class TasksService {
     return this.http.post<any>(targetURL, data, httpOptions);
   }
 
-  delete(id: number) {
+  delete(id: number): Promise<any> {
     const targetURL = this.projectBaseURL + `/plannedtasks/${id}`;
     this.messageService.sendDebug(`PlannedTaskService delete on task with ${id} called`);
-    return this.http.delete<PlannedTask>(targetURL);
+    return this.http.delete<PlannedTask>(targetURL).toPromise();
   }
 
   update(task: Task): Observable<any> {

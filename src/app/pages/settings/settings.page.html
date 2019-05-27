@@ -21,7 +21,7 @@
     </ion-item>
   </ion-list>
 
-  <ion-list #mylist>
+  <ion-list #mylist >
 
     <ion-list-header>
       <ion-label>MY SERVERS</ion-label>
@@ -29,7 +29,7 @@
 
     <ion-item-sliding *ngFor="let server of servers">
 
-      <ion-item>
+      <ion-item (click)="editServer(server)">
         <ion-label text-wrap>
           <h3>{{ server.projectName }}</h3>
           <ion-text color="secondary">

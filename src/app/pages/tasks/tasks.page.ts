@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {Task} from '../../models/task';
 import {Server, StorageService} from '../../services/storage.service';
 import {TasksService} from '../../services/tasks.service';
 import {Router} from '@angular/router';
-import {Platform, ToastController} from '@ionic/angular';
+import {Events, Platform} from '@ionic/angular';
 import {AlertService} from "../../services/alert.service";
 import {Sprint} from "../../models/sprint";
 
@@ -18,61 +18,65 @@ export class TasksPage {
     tasks: Task[] = [];
     tasksNewestFirst: Task[] = [];
 
-    constructor(private router: Router, private alertService: AlertService, private toastController: ToastController, private storageService: StorageService, private plt: Platform, private tasksService: TasksService) {
+    constructor(public events: Events, private zone: NgZone, private router: Router, private alertService: AlertService, private storageService: StorageService, private plt: Platform, private tasksService: TasksService) {
+        this.events.subscribe('updateScreen', () => {
+            this.zone.run(() => {
+                console.log('force update the screen');
+            });
+        });
     }
 
     ionViewWillEnter() {
-        this.getSelectedServer();
-    }
-
-    // KEEP SELECTED SERVER WHEN LEAVING THE PAGE
-    onSelectChange(selectedValue: any) {
-        this.selectedServer.sprintId = selectedValue.detail.value;
-        this.storageService.setSelectedServerSprintId(this.selectedServer.sprintId);
-    }
-
-    getSelectedServer() {
         this.storageService.getSelectedServer().then(server => {
-            if (server) {
-                console.log("Server" + JSON.stringify(server));
-                this.selectedServer = server;
-                if (!this.selectedServer.sprintId && this.selectedServer.projectName) {
-                    this.tasksService.getSprints(this.selectedServer.projectName).subscribe(sprints => {
-                        this.sprints = sprints;
-                        this.tasksService.list(this.selectedServer.projectName, this.selectedServer.sprintId).subscribe(plannedTasks => {
-                            console.log("IF PlannedTasks are: " + plannedTasks);
-                            this.tasks = plannedTasks;
-                            this.tasksNewestFirst = this.tasks.reverse();
-                        });
-                    });
-                } else if (this.selectedServer.projectName) {
-                    this.tasksService.list(this.selectedServer.projectName, this.selectedServer.sprintId).subscribe(plannedTasks => {
-                        console.log("ELSE PlannedTasks are: " + plannedTasks);
-                        this.tasks = plannedTasks;
-                        this.tasksNewestFirst = this.tasks.reverse();
-                    });
-                }
+            this.selectedServer = server;
+            console.log(this.selectedServer);
+            if (!server.sprintId) {
+                console.log("NO SPRINT ID GETSPRINT");
+                this.getSprints(this.selectedServer);
+            } else {
+                console.log("HAS SPRINT ID GETTASKS");
+                this.getTasks(this.selectedServer);
             }
-            console.log('ConstructorCall: ' + this.selectedServer.projectName);
         });
+    }
+
+    // ON SPRINT SELECTION ADD SPRINT ID TO SELECTED SERVER AND GET TASKS
+    onSelectChange(selectedSprintId: any) {
+        console.log("SELECTSPRINTID VALUE: " + selectedSprintId.detail.value);
+        this.storageService.setSelectedServerSprintId(selectedSprintId.detail.value)
+            .then(server => {
+                this.selectedServer = server;
+                this.getTasks(this.selectedServer);
+            });
+    }
+
+    getSprints(server: Server) {
+        this.tasksService.getSprints(server.projectName).subscribe(sprints => {
+            this.sprints = sprints;
+        });
+    }
+
+    getTasks(server: Server) {
+            if (!server) {
+                console.log("TODO: ALERT Server needs to be selected");
+            } else if (server.sprintId && server.projectName) {
+                console.log("PERFECT - LOAD TASKS");
+                this.tasksService.list(server.projectName, server.sprintId).subscribe(plannedTasks => {
+                    this.tasks = plannedTasks;
+                    this.tasksNewestFirst = this.tasks.reverse();
+                    this.storageService.setTasks(this.tasks);
+                });
+            }
+            this.events.publish('updateScreen');
     }
 
     // NAVIGATE TO EDIT TASK SITE
     editTask(task: Task) {
-        this.router.navigate(['/edit-task', task.id ]);
+        this.router.navigate(['/edit-task', task.id]);
     }
 
     // NAVIGATE TO CREATE TASK SITE
     addTask() {
         this.router.navigate(['create-task']);
-    }
-
-    // Helper
-    async showToast(msg) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: 2000
-        });
-        toast.present();
     }
 }

@@ -1,9 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Task} from '../../models/task';
-import {IonList, Platform, ToastController} from '@ionic/angular';
+import {IonList, Platform} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 import {TasksService} from '../../services/tasks.service';
 import {Server, StorageService} from '../../services/storage.service';
+import {ToastService} from "../../services/toast.service";
 
 @Component({
     selector: 'app-create-task',
@@ -11,6 +12,7 @@ import {Server, StorageService} from '../../services/storage.service';
     styleUrls: ['./create-task.page.scss'],
 })
 
+// TODO: CHECK IF MULTIPLE DEVICES CAN SEND AT THE SAME TIME, ELSE WE NEED A BETTER ID ARCHITECTURE LIKE UUID
 export class CreateTaskPage {
     newTask: Task = {} as Task;
     data: any = {} as any;
@@ -19,7 +21,7 @@ export class CreateTaskPage {
 
     @ViewChild('mylist') mylist: IonList;
 
-    constructor(private activatedRoute: ActivatedRoute, private storageService: StorageService, private tasksService: TasksService, private plt: Platform, private toastController: ToastController) {
+    constructor(private activatedRoute: ActivatedRoute, private toastService: ToastService, private storageService: StorageService, private tasksService: TasksService, private plt: Platform) {
     }
 
     ionViewWillEnter() {
@@ -46,16 +48,7 @@ export class CreateTaskPage {
         this.tasksService.create(this.data).subscribe(res => {
             const newPlannedTask = new Task(res.id, res.summary, res.description, null, null, null, null, null, null, null, null, null);
             this.plannedTasks.push(newPlannedTask);
-            this.showToast('Task added!');
+            this.toastService.showToast('Task added!');
         });
-    }
-
-    // Helper
-    async showToast(msg) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: 2000
-        });
-        toast.present();
     }
 }
