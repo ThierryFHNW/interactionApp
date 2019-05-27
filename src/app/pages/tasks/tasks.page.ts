@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Task} from '../../models/task';
-import {Observable} from 'rxjs/index';
 import {Server, StorageService} from '../../services/storage.service';
 import {TasksService} from '../../services/tasks.service';
 import {Router} from '@angular/router';
-import {ToastController} from '@ionic/angular';
+import {Platform, ToastController} from '@ionic/angular';
+import {AlertService} from "../../services/alert.service";
+import {Sprint} from "../../models/sprint";
 
 @Component({
     selector: 'app-tasks',
@@ -12,11 +13,13 @@ import {ToastController} from '@ionic/angular';
     styleUrls: ['./tasks.page.scss'],
 })
 export class TasksPage implements OnInit {
-    tasks: Observable<any>;
     selectedServer: Server = <Server>{};
+    sprints: Sprint[] = [];
 
-    constructor(private router: Router, private toastController: ToastController, private storageService: StorageService, private tasksService: TasksService) {
-        this.loadSelectedServer();
+    constructor(private router: Router, private alertService: AlertService, private toastController: ToastController, private storageService: StorageService, private plt: Platform, private tasksService: TasksService) {
+        this.plt.ready().then(() => {
+            this.loadSelectedServer();
+        });
     }
 
     ngOnInit() {
@@ -24,11 +27,25 @@ export class TasksPage implements OnInit {
         console.log('ngOnInitCall: ' + this.selectedServer.projectName);
     }
 
+    // KEEP SELECTED SERVER WHEN LEAVING THE PAGE
+    onSelectChange(selectedValue: any) {
+        this.selectedServer.sprintId = selectedValue.detail.value;
+        this.storageService.setSelectedServerSprintId(this.selectedServer.sprintId);
+    }
+
     loadSelectedServer() {
         this.storageService.loadSelectedServer().then(server => {
             if (server) {
+                console.log("Server" + server);
                 this.selectedServer = server;
-                this.tasksService.fetchTasks();
+                if (!this.selectedServer.sprintId && this.selectedServer.projectName) {
+                        this.tasksService.getSprints(this.selectedServer.projectName).subscribe(sprints => {
+                            this.sprints = sprints;
+                            // this.alertService.alertSelectedServerHasNoSprint(sprints);
+                        });
+                } else {
+                    this.tasksService.fetchTasks();
+                }
             }
             console.log('ConstructorCall: ' + this.selectedServer.projectName);
         });

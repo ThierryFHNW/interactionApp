@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { Task } from '../../models/task';
+import {Task} from '../../models/task';
 import {IonList, Platform, ToastController} from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 import {TasksService} from '../../services/tasks.service';
@@ -12,12 +12,9 @@ import {Server, StorageService} from '../../services/storage.service';
 })
 
 export class CreateTaskPage implements OnInit {
-    tasks: Task[] = [];
     newTask: Task = {} as Task;
     data: any = {} as any;
-
-
-    selectedServer: Server = <Server>{};
+    selectedServer: Server = {} as Server;
     plannedTasks: Task[] = [];
 
     @ViewChild('mylist') mylist: IonList;
@@ -29,11 +26,11 @@ export class CreateTaskPage implements OnInit {
     }
 
     ngOnInit() {
-        this.loadSelectedServer();
+        this.getSelectedServer();
     }
 
-    loadSelectedServer() {
-        this.storageService.loadSelectedServer().then(server => {
+    getSelectedServer() {
+        this.storageService.getSelectedServer().then(server => {
             if (server) {
                 this.selectedServer = server;
                 console.log('SELECTED SERVER: ' + this.selectedServer.projectName);
@@ -43,20 +40,11 @@ export class CreateTaskPage implements OnInit {
 
     // CREATE
     createTask() {
-        // this.newTask.modified = Date.now();
-        this.newTask.id = Date.now(); // needs to be changed to UUID
-        console.log(this.newTask.summary);
-        console.log(this.newTask.description);
-        console.log(this.selectedServer.projectName);
-        console.log(this.selectedServer.sprintId);
         this.data.projectKey = this.selectedServer.projectName;
         this.data.sprintId = this.selectedServer.sprintId;
         this.data.summary = this.newTask.summary;
         this.data.description = this.newTask.description;
-
         console.log(JSON.stringify(this.data));
-        console.log(JSON.stringify(this.newTask));
-
 
         this.tasksService.create(this.data).subscribe(res => {
             const newPlannedTask = new Task(res.id, res.summary, res.description, null, null, null, null, null, null, null, null, null);
@@ -66,23 +54,11 @@ export class CreateTaskPage implements OnInit {
         });
     }
 
-    // CREATE
-    createTaskBackup() {
-        // this.newTask.modified = Date.now();
-        this.newTask.id = Date.now(); // needs to be changed to UUID
-
-        this.tasksService.create(this.newTask).subscribe(task => {
-            this.newTask = {} as Task;
-            this.showToast('Task added!');
-            this.loadTasks(); // Or add it to the array directly
-        });
-    }
-
     // READ
     loadTasks() {
-/*        this.tasksService.getTasks().then(tasks => {
-            this.tasks = tasks;
-        });*/
+        /*        this.tasksService.getTasks().then(tasks => {
+                    this.tasks = tasks;
+                });*/
     }
 
     // Helper

@@ -12,7 +12,7 @@ export class HomePage implements OnInit {
   constructor(private storageService: StorageService) { }
 
   ngOnInit() {
-    this.storageService.loadSelectedServer().then(server => {
+    this.storageService.getSelectedServer().then(server => {
         this.selectedServer = server;
         console.log('Engine Start ' + this.selectedServer.projectName);
         console.log('Engine Start ' + this.selectedServer.pyWallServer);

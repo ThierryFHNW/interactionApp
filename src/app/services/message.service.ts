@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import {SettingsService} from './settings.service';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {MessageLevel} from '../models/messagelevel';
 import {environment} from '../../environments/environment';
@@ -31,7 +30,7 @@ export class MessageService {
 
   private subject = new BehaviorSubject<AlertMessage>(null);
 
-  constructor(private settingsService: SettingsService) {
+  constructor() {
   }
 
   /**

@@ -8,13 +8,21 @@
 </ion-header>
 
 <ion-content>
-
+    <ion-list *ngIf="!selectedServer.sprintId">
+        <ion-list-header>Select Sprint</ion-list-header>
+        <ion-item>
+            <ion-select (ionChange)="onSelectChange($event)" placeholder="{{'Select Sprint'}}">
+                <ion-select-option *ngFor="let sprint of sprints" [value]="sprint.id">
+                    {{sprint.name}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
 
     <!-- Searchbar maybe ionInput is broke -->
     <ion-searchbar text-center placeholder="Task suchen" (ionInput)="searchTasks($event)"></ion-searchbar>
 
     <!-- Get list of Tasks as Cards -->
-    <ion-card *ngFor="let task of tasksService.tasks" (click)="editTask(task)">
+    <ion-card *ngFor="let task of tasksService.tasksNewestFirst" (click)="editTask(task)">
         <ion-card-content>
         <h5>{{task.summary}}</h5>
             <p>{{task.description}}</p>

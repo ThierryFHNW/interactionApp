@@ -35,7 +35,7 @@ export class SettingsPage implements OnInit {
         });
     }
 
-    // KEEP SELECTED SERVER
+    // KEEP SELECTED SERVER WHEN LEAVING THE PAGE
     onSelectChange(selectedValue: any) {
         this.storageService.setSelectedServer(selectedValue.detail.value);
         this.selectedServer = selectedValue.detail.value;
@@ -44,7 +44,7 @@ export class SettingsPage implements OnInit {
 
     // LOAD SELECTED SERVER
     onSelectLoad() {
-        this.storageService.loadSelectedServer().then( server => {
+        this.storageService.getSelectedServer().then( server => {
                 this.selectedServer = server;
                 console.log("OnSelectLoad: " + this.selectedServer + this.selectedServer.projectName);
             }

@@ -12,7 +12,7 @@ export interface Server {
 
 export interface PlannedTask {
   id: number;
-  projectId: string;
+  projectKey: string;
   sprintId: string;
   summary: string;
   description: string;
@@ -37,7 +37,7 @@ export class StorageService {
   }
 
   // LOAD SELECTED TASK
-  loadSelectedTask(): Promise<PlannedTask> {
+  getSelectedTask(): Promise<PlannedTask> {
     return this.storage.get(SELECTED_TASK);
   }
 
@@ -47,8 +47,19 @@ export class StorageService {
   }
 
   // LOAD SELECTED SERVER
-  loadSelectedServer(): Promise<Server> {
+  getSelectedServer(): Promise<Server> {
     return this.storage.get(SELECTED_KEY);
+  }
+
+  // SET SELECTED SERVER SPRINT ID
+  setSelectedServerSprintId(sprintId: string) {
+    this.getSelectedServer().then(server => {
+      server.sprintId = sprintId;
+      console.log("SERVER IS: " + server);
+      this.storage.set(SELECTED_KEY, server).then(
+          this.getSelectedServer
+      );
+    });
   }
 
 

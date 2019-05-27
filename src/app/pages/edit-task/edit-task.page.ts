@@ -29,22 +29,14 @@ export class EditTaskPage implements OnInit {
   getTaskByUrlParam() {
     const id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'));
     this.tasksService.getTaskById(id).then(task => {
-      console.log(task);
       this.editTask = task;
-      console.log('editTaskID: ' + this.editTask.id);
-      console.log('editTaskSummary: ' + this.editTask.summary);
-      console.log('editTaskDescription: ' + this.editTask.description);
-      console.log('editTaskEstimate: ' + this.editTask.estimate);
-      // this.storageService.updateServer(task).then(task )
     });
   }
 
   // UPDATE
   updateTask() {
-    // this.editTask.modified = Date.now();
-
     this.tasksService.update(this.editTask).subscribe( task => {
-      this.showToast('Server updated!');
+      this.showToast('Task updated!');
       this.loadTasks(); // Or update it inside the array directly
     });
   }

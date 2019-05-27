@@ -7,6 +7,7 @@ import {Task} from '../models/task';
 import {map} from 'rxjs/operators';
 import {Server, StorageService} from './storage.service';
 import {HTTP} from '@ionic-native/http/ngx';
+import { Sprint } from '../models/sprint';
 
 export interface PlannedTask {
   id: number;
@@ -31,20 +32,38 @@ export class TasksService {
   private selectedServer: Server = <Server> {};
   private projectBaseURL: string;
   public tasks: Task[] = [];
+  public tasksNewestFirst: Task[] = [];
+  private sprints: Sprint[] = [];
 
   constructor(private httpNative: HTTP, private http: HttpClient,
               private storageService: StorageService,
               private messageService: MessageService) {
-    this.loadSelectedServer();
+    this.getSelectedServer();
+  }
+
+  /**
+   * returns an Array of all sprints from a specific project
+   * @param {string} projectName
+   * @returns {Observable<Sprint[]>}
+   */
+  getSprints(projectName: string): Observable<Sprint[]> {
+    console.log('GET SPRINTS: this.projectBaseURL: ' + this.projectBaseURL);
+    const targetURL = this.projectBaseURL + `/${projectName}/sprints`;
+    console.log('targetURL: ' + targetURL);
+    return this.http.get<Sprint[]>(targetURL).pipe(map(res => {
+        return res;
+      }));
   }
 
   // Maybe outsource Method and variables to StorageService
-  loadSelectedServer() {
-    this.storageService.loadSelectedServer().then(server => {
+  getSelectedServer() {
+    this.storageService.getSelectedServer().then(server => {
       this.selectedServer = server;
       this.projectBaseURL = `${this.selectedServer.pyWallServer}/projects`;
-      console.log('Selected Server Projectname: ' + this.selectedServer.projectName);
-      console.log('this.projectBaseURL 1: ' + this.projectBaseURL);
+      console.log('Selected Server: ' + this.selectedServer.projectName);
+      /*if (!this.selectedServer.sprintId) {
+        this.getSprints(this.selectedServer.projectName);
+      }*/
     });
   }
 
@@ -52,9 +71,11 @@ export class TasksService {
     const obj = this;
     console.log(this.selectedServer.projectName + ' ' + this.selectedServer.sprintId)
     if (this.selectedServer.projectName && this.selectedServer.sprintId) {
+      this.tasks = [];
       this.list(this.selectedServer.projectName, this.selectedServer.sprintId)
           .subscribe(plannedTasks => {
             this.tasks = plannedTasks;
+            this.tasksNewestFirst = this.tasks.reverse();
             console.log("THIS.PLANNEDTASK: " + JSON.stringify(this.tasks));
             console.log("THIS.SELECTEDSERVER: " + JSON.stringify(this.selectedServer));
           });
