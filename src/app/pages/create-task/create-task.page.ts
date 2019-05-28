@@ -20,12 +20,23 @@ export class CreateTaskPage {
     plannedTasks: Task[] = [];
 
     @ViewChild('mylist') mylist: IonList;
+    @ViewChild('focusName') focusName;
+    @ViewChild('focusDescription') focusDescription;
+
 
     constructor(private activatedRoute: ActivatedRoute, private toastService: ToastService, private storageService: StorageService, private tasksService: TasksService, private plt: Platform) {
     }
 
     ionViewWillEnter() {
         this.getSelectedServer();
+    }
+
+    ionViewDidEnter() {
+        this.focusName.setFocus();
+    }
+
+    goToDescription() {
+        this.focusDescription.setFocus();
     }
 
     getSelectedServer() {
@@ -49,6 +60,9 @@ export class CreateTaskPage {
             const newPlannedTask = new Task(res.id, res.summary, res.description, null, null, null, null, null, null, null, null, null);
             this.plannedTasks.push(newPlannedTask);
             this.toastService.showToast('Task added!');
+            this.newTask = <Task>{};
+
+            this.focusName.setFocus();
         });
     }
 }

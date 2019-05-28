@@ -43,6 +43,9 @@ export class SettingsPage {
             this.servers = servers;
             this.serversNewestFirst = this.servers.reverse();
         });
+        this.storageService.getSelectedServer().then( server => {
+            this.selectedServer = server;
+        });
     }
 
     // KEEP SELECTED SERVER WHEN LEAVING THE PAGE

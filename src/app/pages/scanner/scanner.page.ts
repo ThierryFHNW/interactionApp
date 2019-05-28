@@ -13,7 +13,7 @@ import {ToastService} from '../../services/toast.service';
 
 // TODO: 1. If two settings are exactly the same overwrite the other setting
 export class ScannerPage {
-    mock = false;
+    mock = true;
     servers: Server[] = [];
     newServer: Server = <Server>{};
     scannedCode: string;

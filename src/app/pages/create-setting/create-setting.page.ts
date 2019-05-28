@@ -11,8 +11,8 @@ import {ToastService} from "../../services/toast.service";
 })
 
 /* TODO: 1. If two settings are exactly the same
-   TODO: 2. Show Settings with same Title differently
-   TODO: 3.
+   TODO: 2. If two setttings have the same title, how to differ?
+   TODO: 3. Form validation
 */
 export class CreateSettingPage {
     servers: Server[] = [];

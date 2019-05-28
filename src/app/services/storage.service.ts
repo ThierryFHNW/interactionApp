@@ -80,6 +80,27 @@ export class StorageService {
         return this.storage.get(SELECTED_SERVER);
     }
 
+    // DELETE SERVER
+    deleteSelectedServer(id: number): Promise<Server> {
+        return this.storage.get(SELECTED_SERVER).then((server: Server) => {
+            if (!server) {
+                return null;
+            }
+            if (server.id === id) {
+                return this.setSelectedServer(<Server>{});
+            }
+        });
+        return this.getSelectedServer();
+    }
+
+    /*deleteSelectedServer2(id: number): Promise<any> {
+        this.getSelectedServer().then(server => {
+            if (server.id === id) {
+                return this.setSelectedServer(null);
+            }
+        });
+    }*/
+
     // SET SELECTED SERVER SPRINT ID
     setSelectedServerById(server: Server, sprintId: number): Promise<Server> {
         server.id = sprintId;
@@ -145,20 +166,12 @@ export class StorageService {
 
             for (const i of servers) {
                 if (i.id === server.id) {
-                    console.log(i.id + " " + server.id);
                 }
                 if (+i.id === server.id) {
-                    console.log(+i.id)
                     newServers.push(server);
-                    console.log("it is: " + server);
-                    console.log("i.id: " + i.id);
-                    console.log("server.id: " + server.id);
-                    console.log(JSON.stringify(i));
-                    console.log(JSON.stringify(server));
                 } else {
                     newServers.push(i);
                 }
-                console.log(newServers);
             }
 
             return this.storage.set(SERVERS, newServers);
@@ -177,6 +190,9 @@ export class StorageService {
             for (const i of servers) {
                 if (i.id !== id) {
                     serversToKeep.push(i);
+                } else {
+                    console.log(id);
+                    this.deleteSelectedServer(id);
                 }
             }
             return this.storage.set(SERVERS, serversToKeep);
