@@ -3,6 +3,7 @@ import {NavController} from "@ionic/angular";
 import * as MyScriptJS from 'myscript/dist/myscript.min.js';
 
 
+
 @Component({
   selector: 'app-nebo',
   templateUrl: './nebo.page.html',

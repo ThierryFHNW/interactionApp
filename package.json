@@ -33,6 +33,7 @@
     "cordova-plugin-advanced-http": "^2.0.9",
     "core-js": "^2.5.4",
     "myscript": "^4.3.0",
+    "myscript-text-web": "^5.1.0",
     "ngx-socket-io": "^2.1.1",
     "phonegap-plugin-barcodescanner": "8.0.1",
     "rxjs": "^6.5.2",
