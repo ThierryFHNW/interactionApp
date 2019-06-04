@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Server, StorageService} from '../../services/storage.service';
 import {IonList, Platform} from '@ionic/angular';
 import {ActivatedRoute, Router} from '@angular/router';

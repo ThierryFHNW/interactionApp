@@ -2,10 +2,9 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Platform, IonList} from '@ionic/angular';
 import {Server, StorageService} from '../../services/storage.service';
 import {Router} from '@angular/router';
-import {Task} from "../../models/task";
 import {ToastService} from "../../services/toast.service";
 import {AlertService} from "../../services/alert.service";
-import {validate} from "codelyzer/walkerFactory/walkerFn";
+import {SharedService} from '../../services/shared.service';
 
 @Component({
     selector: 'app-settings',
@@ -13,11 +12,11 @@ import {validate} from "codelyzer/walkerFactory/walkerFn";
     styleUrls: ['./settings.page.scss'],
 })
 // this is the controller now, no function in brackets
-export class SettingsPage {
+export class SettingsPage implements OnInit {
     servers: Server[] = [];
     serversNewestFirst: Server[] = [];
     selectedServer: Server = <Server>{};
-    emptyTasks: Task[] = [];
+    message: string;
 
     // USE DOM ELEMENT TO
     @ViewChild('mylist') mylist: IonList;
@@ -26,7 +25,14 @@ export class SettingsPage {
                 private router: Router,
                 private storageService: StorageService,
                 private plt: Platform,
-                private alertService: AlertService) {
+                private alertService: AlertService,
+                private sharedService: SharedService) {
+    }
+
+    ngOnInit() {
+        this.sharedService.currentMessage.subscribe(message => this.message);
+        console.log(this.message);
+        this.siblingsChangeValue();
     }
 
     ionViewWillEnter() {
@@ -35,6 +41,12 @@ export class SettingsPage {
             this.loadServers();
             this.onSelectLoad();
         });
+    }
+
+    siblingsChangeValue() {
+        console.log(this.message);
+        this.sharedService.changeMessage("Settings changed the value");
+        console.log(this.message);
     }
 
     // READ

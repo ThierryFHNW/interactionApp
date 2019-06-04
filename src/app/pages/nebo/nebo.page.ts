@@ -1,23 +1,50 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NavController} from "@ionic/angular";
 import * as MyScriptJS from 'myscript/dist/myscript.min.js';
-
-
+import { HTTP } from '@ionic-native/http/ngx';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Platform} from '@ionic/angular';
+import {Task} from '../../models/task';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-nebo',
   templateUrl: './nebo.page.html',
   styleUrls: ['./nebo.page.scss'],
 })
-export class NeboPage implements AfterViewInit {
-
+export class NeboPage {
+  fetchedData: any;
   @ViewChild('editor') editor: ElementRef;
 
-  constructor(public navCtrl: NavController) {
-
+  constructor(private http: HttpClient, private nativeHttp: HTTP, private plt: Platform) {
+    this.plt.ready().then( () => {
+      this.getDataNativeHttp().then(value => {
+        console.log(value);
+      })
+    });
   }
 
-  ngAfterViewInit() {
+  getDataNativeHttp(): Promise<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+
+/*    this.http.get('https://jsonplaceholder.typicode.com/users')
+        .subscribe(data => {
+        this.fetchedData = JSON.stringify(data);
+    });*/
+
+
+    return this.nativeHttp.get('https://jsonplaceholder.typicode.com/users', {}, {'Content-Type': 'application/json'})
+        .then(data => {
+          this.fetchedData = JSON.parse(data.data);
+        }, err => {
+          console.log(err);
+        });
+  }
+
+  /*ngAfterViewInit() {
     MyScriptJS.register(this.editor.nativeElement, {
       recognitionParams: {
         type: 'TEXT',
@@ -31,5 +58,5 @@ export class NeboPage implements AfterViewInit {
         },
       },
     });
-  }
+  }*/
 }

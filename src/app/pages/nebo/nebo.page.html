@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content padding no-bounce>
+
+  <ion-button (click)="getDataNativeHttp()">{{fetchedData}}</ion-button>
+  <p>{{fetchedData}}</p>
   <div  class="editor" #editor></div>
 
 </ion-content>
