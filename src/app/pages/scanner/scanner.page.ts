@@ -18,8 +18,8 @@ export class ScannerPage {
     newServer: Server = <Server>{};
     scannedCode: string;
     scannedCodeArray: string[];
-    scannedCodeArrayMock = ['AWMM', 'http://localhost:8000', 'http://localhost:9091', '320'];
-    scannedCodeArrayMock2 = ['AWTEST', 'https://fl-5-104.zhdk.cloud.switch.ch/aWallDev', 'http://localhost:9091', '395'];
+    scannedCodeArrayMock2 = ['AWMM', 'https://fl-5-104.zhdk.cloud.switch.ch', 'http://localhost:9091', '320'];
+    scannedCodeArrayMock = ['AWTEST', 'https://fl-5-104.zhdk.cloud.switch.ch/aWallDev/api/', 'http://localhost:9091', '285'];
 
     constructor(private barcodeScanner: BarcodeScanner,
                 private toastService: ToastService,

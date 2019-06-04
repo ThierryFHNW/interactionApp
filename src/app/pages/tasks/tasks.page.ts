@@ -4,8 +4,8 @@ import {Server, StorageService} from '../../services/storage.service';
 import {TasksService} from '../../services/tasks.service';
 import {Router} from '@angular/router';
 import {Events, Platform} from '@ionic/angular';
-import {AlertService} from "../../services/alert.service";
-import {Sprint} from "../../models/sprint";
+import {AlertService} from '../../services/alert.service';
+import {Sprint} from '../../models/sprint';
 import {SharedService} from '../../services/shared.service';
 
 @Component({
@@ -49,27 +49,17 @@ export class TasksPage implements OnInit {
     ionViewWillEnter() {
         this.storageService.getSelectedServer().then(server => {
             this.selectedServer = server;
-            console.log(this.selectedServer);
-            if (!server.sprintId) {
-                console.log("NO SPRINT ID GETSPRINT");
-                this.getSprints(this.selectedServer);
-            } else {
-                console.log("HAS SPRINT ID GETTASKS");
-                this.getTasks(this.selectedServer);
-            }
+            (!server.sprintId) ? this.getSprints(this.selectedServer) : this.getTasks(this.selectedServer);
         });
     }
 
 
     siblingsChangeMessage() {
-        console.log(this.message);
-        this.sharedService.changeMessage("Tasks changed the value");
-        console.log(this.message);
+        this.sharedService.changeMessage('Tasks changed the value');
     }
 
     // ON SPRINT SELECTION ADD SPRINT ID TO SELECTED SERVER AND GET TASKS
     onSelectChange(selectedSprintId: any) {
-        console.log("SELECTSPRINTID VALUE: " + selectedSprintId.detail.value);
         this.storageService.setSelectedServerSprintId(selectedSprintId.detail.value)
             .then(server => {
                 this.selectedServer = server;
